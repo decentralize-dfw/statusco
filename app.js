@@ -810,12 +810,12 @@ function positionRightToggles() {
         if (row0) { row0.style.position = 'relative'; row0.style.top = ''; }
         if (row1) { row1.style.position = 'relative'; row1.style.top = ''; }
         if (row2) { row2.style.position = 'relative'; row2.style.top = ''; }
-        // Mobilde: yatay sıra, sağ hizalı, info-buttons'ın altında
+        // Mobilde: yatay sıra, SOL hizalı (btn-about hizasında), altında
         rightToggles.style.flexDirection = 'row';
         rightToggles.style.gap = '8px';
         rightToggles.style.alignItems = 'flex-start';
-        rightToggles.style.right = '12px';
-        rightToggles.style.left = '';
+        rightToggles.style.left = '12px';
+        rightToggles.style.right = '';
         rightToggles.style.transform = '';
         // info-buttons'ın altına konumlandır
         const infoButtons = document.getElementById('info-buttons');
