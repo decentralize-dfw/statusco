@@ -810,7 +810,8 @@ function positionRightToggles() {
         if (row0) { row0.style.position = 'relative'; row0.style.top = ''; }
         if (row1) { row1.style.position = 'relative'; row1.style.top = ''; }
         if (row2) { row2.style.position = 'relative'; row2.style.top = ''; }
-        // Mobilde: yatay sıra, SOL hizalı, toggle orta hizası = logo png orta hizası
+        // Mobilde: yatay sıra, btn-about'un ALTINDA
+        // Sol toggle topunun yatay merkezi = logo PNG'nin yatay merkezi
         rightToggles.style.flexDirection = 'row';
         rightToggles.style.gap = '8px';
         rightToggles.style.alignItems = 'flex-start';
@@ -819,13 +820,21 @@ function positionRightToggles() {
         const infoButtons = document.getElementById('info-buttons');
         if (infoButtons) {
             const infoRect = infoButtons.getBoundingClientRect();
-            const logoCenterY = infoRect.top + infoRect.height / 2;
             const toggleSize = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--wire-toggle-size')) || 9.6;
-            rightToggles.style.left = (infoRect.right + 8) + 'px';
-            rightToggles.style.top = (logoCenterY - toggleSize / 2) + 'px';
+            // Dikey: btn-about'un altına
+            rightToggles.style.top = (infoRect.bottom + 6) + 'px';
+            // Yatay: sol toggle topu = logo PNG yatay merkezi
+            const logo = infoButtons.querySelector('.btn-about-logo');
+            if (logo) {
+                const logoRect = logo.getBoundingClientRect();
+                const logoCenterX = logoRect.left + logoRect.width / 2;
+                rightToggles.style.left = (logoCenterX - toggleSize / 2) + 'px';
+            } else {
+                rightToggles.style.left = (infoRect.left + 12) + 'px';
+            }
         } else {
-            rightToggles.style.left = '160px';
-            rightToggles.style.top = '20px';
+            rightToggles.style.left = '12px';
+            rightToggles.style.top = '44px';
         }
         return;
     }
