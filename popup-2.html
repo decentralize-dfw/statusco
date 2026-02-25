@@ -692,7 +692,7 @@
 
         let artifacts = [];
         let filteredArtifacts = [];
-        let currentCategory = 'All';
+        let currentCategory = ''; // Başlangıçta boş
         let isInfoOpen = false;
         let currentLang = 'en'; 
         let sheetRows = null; 
@@ -700,6 +700,7 @@
         let currentCarouselImages = []; 
         let currentCarouselIndex = 0; 
 
+        // Sütun İndeksleri
         const TR_COLUMNS = {
             artworkName: 38, category: 39, productType: 40, color: 41, material: 42,
             description: 20, artistBio: 24, headerDesc: 3, price: 43
@@ -709,8 +710,9 @@
             description: 18, artistBio: 23, headerDesc: 2, price: 16
         };
 
-        const TR_LABELS = { siteTitle: 'POP UP 001: ARTSHOW', information: 'Bilgi', categoryLabel: 'Kategori:' };
-        const EN_LABELS = { siteTitle: 'POP UP 001: ARTSHOW', information: 'Information', categoryLabel: 'Category:' };
+        // Dil Etiketleri (Tümü/All seçeneği eklendi)
+        const TR_LABELS = { siteTitle: 'POP UP 001: ARTSHOW', information: 'Bilgi', categoryLabel: 'Kategori:', allCategory: 'Tümü' };
+        const EN_LABELS = { siteTitle: 'POP UP 001: ARTSHOW', information: 'Information', categoryLabel: 'Category:', allCategory: 'All' };
 
         function getLabels() {
             return currentLang === 'tr' ? TR_LABELS : EN_LABELS;
@@ -784,7 +786,8 @@
 
                 return {
                     dropCode: val(1),
-                    category: val(cols.category),
+                    artworkName: val(cols.artworkName), // İsim eklendi
+                    category: val(cols.category),     // Kategori çevirisi eklendi
                     imageLink: val(11),
                     images: allImages,
                     thumbnail: val(13),
@@ -792,7 +795,7 @@
                 };
             }).filter(i => i.dropCode && i.dropCode.includes("CA_"));
 
-            currentCategory = 'All';
+            currentCategory = labels.allCategory;
             filteredArtifacts = artifacts;
         }
 
@@ -823,7 +826,9 @@
         }
 
         function setupFilters() {
-            const categories = ['All', ...new Set(artifacts.map(i => i.category))].filter(c => c);
+            const labels = getLabels();
+            const categories = [labels.allCategory, ...new Set(artifacts.map(i => i.category))].filter(c => c);
+            
             document.getElementById('filter-list').innerHTML = categories.map(cat => `
                 <button onclick="applyFilter('${cat}')" class="filter-btn ${currentCategory === cat ? 'active' : ''}" data-cat="${cat}">${cat}</button>
             `).join('');
@@ -831,6 +836,7 @@
 
         window.applyFilter = function(cat) {
             const container = document.getElementById('main-container');
+            const labels = getLabels();
             
             const buttons = document.querySelectorAll('.filter-btn');
             buttons.forEach(btn => {
@@ -841,7 +847,7 @@
             container.classList.add('fade-out');
             setTimeout(() => {
                 currentCategory = cat;
-                filteredArtifacts = cat === 'All' ? artifacts : artifacts.filter(i => i.category === cat);
+                filteredArtifacts = cat === labels.allCategory ? artifacts : artifacts.filter(i => i.category === cat);
                 renderContent(); 
                 container.classList.remove('fade-out');
             }, 300);
@@ -860,6 +866,14 @@
                         <img src="${item.thumbnail}" loading="lazy" 
                              style="width: ${scalePct}%; height: ${scalePct}%;" 
                              class="fit-image transition-opacity duration-300">
+                    </div>
+                    <!-- ÜRÜN METİNLERİ (KOD, İSİM, KATEGORİ) GERİ EKLENDİ -->
+                    <div class="w-full flex justify-between items-start mt-2 px-2">
+                        <div class="flex flex-col text-left">
+                            <span class="font-body text-[10px] font-bold uppercase tracking-wider text-black">${item.dropCode}</span>
+                            <span class="font-body text-[9px] text-gray-500 uppercase mt-0.5">${item.artworkName}</span>
+                        </div>
+                        <span class="font-body text-[8px] text-gray-400 uppercase text-right">${item.category}</span>
                     </div>
                 </div>
             `;
