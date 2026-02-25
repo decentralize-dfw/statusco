@@ -303,17 +303,15 @@
             width: 100%;
             aspect-ratio: 1 / 1;
             display: flex; 
-            align-items: flex-end;
+            align-items: center; /* KARENİN TAM ORTASI İÇİN */
             justify-content: center;
             overflow: hidden; 
             background-color: transparent;
         }
 
         .fit-image { 
-            width: 80%; 
-            height: 80%; 
+            /* Object fit contain katsayıyla % scale edilince tam sığmayı sağlar */
             object-fit: contain; 
-            object-position: bottom;
         }
 
         #loading-overlay {
@@ -408,8 +406,8 @@
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            width: 40px;
-            height: 40px;
+            width: 30px; /* Ufaldı */
+            height: 30px; /* Ufaldı */
             border-radius: 50%;
             background: rgba(255,255,255,0.9);
             border: 1px solid rgba(0,0,0,0.1);
@@ -428,12 +426,13 @@
             color: rgba(0,0,0,0.8);
         }
 
-        .carousel-arrow.prev { left: 4vw; }
-        .carousel-arrow.next { right: 4vw; }
+        /* Ekrana yapışmaması için boşluk bırakıldı */
+        .carousel-arrow.prev { left: 20px; }
+        .carousel-arrow.next { right: 20px; }
 
         .carousel-arrow svg {
-            width: 20px;
-            height: 20px;
+            width: 16px;
+            height: 16px;
             stroke-width: 2;
         }
 
@@ -450,8 +449,9 @@
 
         @media (min-width: 1024px) {
             .carousel-thumbnails.show { display: flex; position: absolute; bottom: 20px; }
-            .carousel-arrow.prev { left: 5vw; }
-            .carousel-arrow.next { right: 5vw; }
+            /* Desktop'ta da kenardan biraz daha içeride dursun */
+            .carousel-arrow.prev { left: 40px; }
+            .carousel-arrow.next { right: 40px; }
         }
 
         .carousel-thumb {
@@ -571,33 +571,36 @@
     </div>
 
     <!-- Header Section -->
-    <div class="header-bg w-full border-b border-gray-100 overflow-hidden">
-        <div class="max-w-[2400px] h-full mx-auto relative">
+    <!-- Alan 2 katına çıkarıldı. Mobilde min-h-[600px] civarı devasa bir kutu oldu -->
+    <div class="header-bg w-full border-b border-gray-100 overflow-hidden relative">
+        <!-- Desktop'ta justify-end kullanılarak GIF ve yapı orijinaline döndürüldü -->
+        <div class="max-w-[2400px] mx-auto relative flex flex-col items-center justify-start lg:justify-end min-h-[500px] lg:min-h-[700px] pt-[200px] pb-10 lg:pt-6 lg:pb-0 h-auto lg:h-[75vh]">
             
             <!-- SADECE DESKTOP'TA GÖRÜNEN GIF (Yazı ve hizalama orijinal yerinde) -->
             <div class="logo-desktop-shift hidden lg:flex pt-6 lg:pt-0">
                 <img src="logo-anim-fuls.gif" alt="Logo Animated" onerror="this.style.display='none'">
             </div>
             
-            <!-- MOBİL İÇİN YUKARIDAN BAŞLAYIP AŞAĞI AÇILAN, DESKTOP İÇİN ORİJİNAL HİZADA HEADER İÇERİĞİ -->
-            <header class="flex flex-col lg:flex-row items-center justify-start lg:justify-end px-4 lg:px-16 pt-[120px] pb-10 lg:pt-6 lg:pb-0 h-auto lg:h-full relative z-20 w-full">
+            <!-- MOBİL: Ortalanmış alan, yukarıdan 200px boşluk ile başlar (açıldığında zıplamaz, aşağı iter). DESKTOP: Orijinal hizasında -->
+            <header class="flex flex-col lg:flex-row items-center justify-center lg:items-center px-4 lg:px-16 relative z-20 w-full">
                 <div class="hidden lg:block lg:w-[35%] pointer-events-none"></div>
-                <div class="w-full lg:w-[60%] flex flex-col items-center lg:items-start text-center lg:text-left h-full">
-                    <h1 id="site-title" class="font-header text-[11px] tracking-[0.5em] uppercase mb-4 text-black">POP UP 001: ARTSHOW</h1>
+                <div class="w-full lg:w-[60%] flex flex-col items-center lg:items-start text-center h-full">
+                    
+                    <h1 id="site-title" class="font-header text-[11px] lg:text-[14px] tracking-[0.5em] uppercase mb-4 text-black text-center">POP UP 001: ARTSHOW</h1>
                     
                     <!-- Mobil: Ortada Information Tuşu, Sağ Kenarda TR Tuşu (Hover Kapalı) -->
-                    <div class="w-full relative flex justify-center items-center lg:hidden mb-2">
-                        <button onclick="toggleInfo()" class="font-body text-[9px] uppercase tracking-widest border border-black/10 px-4 py-2 text-black bg-white outline-none cursor-pointer">
+                    <div class="w-full relative flex justify-center items-center lg:hidden mb-4 h-[30px]">
+                        <button onclick="toggleInfo()" class="font-body text-[9px] uppercase tracking-widest border border-black/10 px-4 py-2 text-black bg-white outline-none cursor-pointer h-full">
                             <span id="info-btn-text">Information</span> <span id="info-icon">+</span>
                         </button>
                         <!-- Sağ kenara dayalı TR butonu (Menüdeki 12px right boşluğuyla birebir aynı hizada) -->
-                        <button id="lang-toggle-mobile" onclick="toggleLanguage()" class="absolute font-body text-[9px] uppercase tracking-widest border border-black/10 px-4 py-2 text-black bg-white outline-none cursor-pointer" style="right: -4px;">
+                        <button id="lang-toggle-mobile" onclick="toggleLanguage()" class="absolute font-body text-[9px] uppercase tracking-widest border border-black/10 px-4 py-2 text-black bg-white outline-none cursor-pointer h-full" style="right: 12px;">
                             TR
                         </button>
                     </div>
                     
-                    <div id="header-description-container">
-                        <p id="header-description" class="font-body text-[7.5pt] text-gray-600 whitespace-pre-wrap px-4 lg:px-0 text-justify" style="text-align-last: left;"></p>
+                    <div id="header-description-container" class="w-[90%] max-w-4xl mx-auto">
+                        <p id="header-description" class="font-body text-[7.5pt] lg:text-[9pt] text-gray-800 whitespace-pre-wrap text-center"></p>
                     </div>
                 </div>
             </header>
@@ -605,8 +608,8 @@
         </div>
     </div>
 
-    <!-- Control Bar (Kategori Üstü Çizgi Boşluğu İki Katına Çıkarıldı pt-24 lg:pt-32) -->
-    <div class="max-w-[2400px] mx-auto px-4 lg:px-16 pt-24 lg:pt-32 pb-4">
+    <!-- Control Bar (Kategori Üstü Çizgi Boşluğu ve Alan İki Katına Çıkarıldı) -->
+    <div class="max-w-[2400px] mx-auto px-4 lg:px-16 pt-8 pb-4">
         <div class="flex items-center border-b border-gray-100 pb-4">
             <div class="flex items-center gap-4 flex-1 min-w-0">
                 <div id="filter-wrapper" class="flex flex-wrap items-center gap-2 lg:gap-6">
@@ -642,8 +645,8 @@
 
     <!-- Modal Overlay -->
     <div id="detail-modal-overlay">
-        <!-- SOL ALT KÖŞEDE ÇOK UFAK MESAFELİ 6PX KOD (YENİ EKLENDİ - BOTTOM-2 LEFT-2) -->
-        <div id="modal-drop-code" class="absolute bottom-2 left-2 lg:bottom-4 lg:left-4 z-[1100] text-[6px] font-body font-bold uppercase text-black tracking-wider"></div>
+        <!-- SOL ALT KÖŞEDE ÇOK UFAK MESAFELİ 6PX KOD (YENİ EKLENDİ - BOTTOM-2 LEFT-2 - BOLD YOK) -->
+        <div id="modal-drop-code" class="absolute bottom-2 left-2 lg:bottom-4 lg:left-4 z-[1100] text-[6px] font-body uppercase text-black tracking-wider"></div>
         
         <button id="close-modal" class="absolute top-6 left-6 lg:top-8 lg:left-8 z-[1100] p-2 hover:bg-black hover:text-white transition-all rounded-full bg-white/90 border border-gray-100 shadow-sm">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
@@ -867,9 +870,9 @@
                              style="width: ${scalePct}%; height: ${scalePct}%;" 
                              class="fit-image">
                     </div>
-                    <!-- SADECE DESKTOP, SOL ALTTA 6PX KOD (KATEGORİSİZ, HOVERSİZ) -->
+                    <!-- SADECE DESKTOP, SOL ALTTA 6PX KOD (KATEGORİSİZ, BOLD İPTAL) -->
                     <div class="w-full mt-1 px-1 hidden lg:flex justify-start">
-                        <span class="font-body text-[6px] font-bold uppercase tracking-wider text-black">${item.dropCode}</span>
+                        <span class="font-body text-[6px] uppercase tracking-wider text-black">${item.dropCode}</span>
                     </div>
                 </div>
             `;
@@ -991,7 +994,12 @@
             currentModalDropCode = null;
         };
         
-        window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeBtn.onclick(); });
+        // Klavye ile kapatma, sağ ve sol ok tuşları eklendi
+        window.addEventListener('keydown', (e) => { 
+            if (e.key === 'Escape') closeBtn.onclick(); 
+            if (e.key === 'ArrowRight') window.carouselNext();
+            if (e.key === 'ArrowLeft') window.carouselPrev();
+        });
         window.onload = fetchSheetData;
     </script>
 </body>
