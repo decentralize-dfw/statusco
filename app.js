@@ -810,20 +810,22 @@ function positionRightToggles() {
         if (row0) { row0.style.position = 'relative'; row0.style.top = ''; }
         if (row1) { row1.style.position = 'relative'; row1.style.top = ''; }
         if (row2) { row2.style.position = 'relative'; row2.style.top = ''; }
-        // Mobilde: yatay sıra, SOL hizalı (btn-about hizasında), altında
+        // Mobilde: yatay sıra, SOL hizalı, toggle orta hizası = logo png orta hizası
         rightToggles.style.flexDirection = 'row';
         rightToggles.style.gap = '8px';
         rightToggles.style.alignItems = 'flex-start';
-        rightToggles.style.left = '12px';
         rightToggles.style.right = '';
         rightToggles.style.transform = '';
-        // info-buttons'ın altına konumlandır
         const infoButtons = document.getElementById('info-buttons');
         if (infoButtons) {
             const infoRect = infoButtons.getBoundingClientRect();
-            rightToggles.style.top = (infoRect.bottom + 6) + 'px';
+            const logoCenterY = infoRect.top + infoRect.height / 2;
+            const toggleSize = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--wire-toggle-size')) || 9.6;
+            rightToggles.style.left = (infoRect.right + 8) + 'px';
+            rightToggles.style.top = (logoCenterY - toggleSize / 2) + 'px';
         } else {
-            rightToggles.style.top = '44px';
+            rightToggles.style.left = '160px';
+            rightToggles.style.top = '20px';
         }
         return;
     }
