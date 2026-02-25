@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contemporary Artifacts | Catalog</title>
+
+    <!-- FAVICON -->
+    <link rel="icon" type="image/png" href="weblogo.png">
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+     
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Capriola&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #ffffff;
+            color: #1a1a1a;
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* --- DESKTOP BANNER & LOGO (1024px+) --- */
+        @media (min-width: 1024px) {
+            .header-bg {
+                position: relative;
+                background-image: url('productsbanner.png');
+                background-size: cover;
+                background-position: 25.43% 60.16%;
+                background-repeat: no-repeat;
+                aspect-ratio: 2556 / 748;
+                max-height: 75vh;
+            }
+             
+            .logo-desktop-shift {
+                position: absolute;
+                left: 19%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+                z-index: 10;
+                width: 10%; 
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+        }
+
+        /* --- MOBILE LOGO & HEADER --- */
+        @media (max-width: 1023px) {
+            .logo-mobile-scale {
+                width: 15%; 
+                margin: 0 auto;
+                display: block;
+            }
+        }
+
+        .logo-desktop-shift img, .logo-mobile-scale img {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+        }
+
+        /* --- TYPOGRAPHY --- */
+        .font-header { font-family: 'Capriola', sans-serif; }
+        .font-body { 
+            font-family: 'Space Mono', monospace; 
+            letter-spacing: -0.2px;
+            line-height: 1.2;
+        }
+
+        /* --- GRID SYSTEM --- */
+        .dynamic-grid {
+            display: grid;
+            gap: 1rem;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            transition: opacity 0.4s ease-in-out;
+        }
+
+        @media (min-width: 1024px) { 
+            .dynamic-grid { 
+                gap: 3rem;
+                grid-template-columns: repeat(5, minmax(0, 1fr)); 
+            } 
+        }
+
+        /* --- TABLE SYSTEM (PARAMETRIC LIST) --- */
+        .catalog-table-container {
+            width: 100%;
+            overflow-x: hidden;
+            transition: opacity 0.4s ease-in-out;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: 'Space Mono', monospace;
+            font-size: clamp(3.5px, 1.8vw, 9px); 
+            table-layout: fixed;
+            border-left: 1px solid #e5e7eb;
+            border-right: 1px solid #e5e7eb;
+        }
+         
+        @media (min-width: 1024px) {
+            table { font-size: 9pt; table-layout: auto; }
+        }
+
+        th {
+            font-family: 'Capriola', sans-serif;
+            font-size: clamp(3px, 1.6vw, 8px); 
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            text-align: left;
+            padding: 4px 2px;
+            border-bottom: 1px solid #e5e7eb;
+            border-right: 1px solid #e5e7eb;
+            background-color: #f9fafb;
+            color: #9ca3af;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        td {
+            padding: 4px 2px;
+            border-bottom: 1px solid #f3f4f6;
+            border-right: 1px solid #f3f4f6;
+            vertical-align: middle;
+            color: #111827;
+            white-space: normal; 
+            word-wrap: break-word;
+            line-height: 1.1;
+        }
+         
+        th:last-child, td:last-child {
+            border-right: none;
+        }
+
+        @media (min-width: 1024px) {
+            th, td { padding: 12px; border: 1px solid #e5e7eb; white-space: normal; line-height: 1.3; }
+            th { font-size: 8pt; letter-spacing: 0.1em; color: #6b7280; }
+        }
+
+        tr:hover td { background-color: #f9fafb; cursor: pointer; }
+
+        /* LIST VIEW THUMBNAIL WRAPPER */
+        .thumb-cell { 
+            width: 12%; 
+            padding: 2px !important;
+            height: 1px; /* Triggers fill for flex child */
+        }
+        .thumb-inner-container {
+            width: 100%;
+            height: 100%;
+            min-height: 40px; /* Ensures space on mobile */
+            display: flex;
+            align-items: flex-end; /* ALIGN TO BOTTOM */
+            justify-content: center;
+        }
+        @media (min-width: 1024px) { 
+            .thumb-cell { width: 80px; padding: 4px !important; } 
+            .thumb-inner-container { min-height: 80px; }
+        }
+         
+        .thumb-img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: contain; 
+            object-position: bottom; /* ENSURE ALIGNMENT */
+            display: block; 
+        }
+
+        /* --- UI COMPONENTS --- */
+        .aspect-square-container {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            display: flex; 
+            align-items: flex-end; /* ALIGN TO BOTTOM - GRID */
+            justify-content: center;
+            overflow: hidden; 
+            background-color: transparent;
+        }
+
+        .fit-image { 
+            width: 80%; 
+            height: 80%; 
+            object-fit: contain; 
+            object-position: bottom; /* ENSURE ALIGNMENT */
+        }
+
+        #loading-overlay {
+            position: fixed; inset: 0; background: white; z-index: 10000;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        #detail-modal-overlay {
+            position: fixed; inset: 0;
+            background-color: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            z-index: 1000; display: none; overflow: hidden;
+        }
+
+        #detail-modal {
+            width: 100%; height: 100%; display: flex; flex-direction: row; overflow: hidden;
+        }
+
+        @media (max-width: 1023px) { 
+            #detail-modal { flex-direction: column; overflow-y: auto; }
+        }
+
+        .glass-panel {
+            background-color: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+        }
+
+        .image-container-scale { width: 80%; height: 80%; display: flex; align-items: center; justify-content: center; }
+         
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #000; }
+
+        #header-description-container {
+            max-height: 0; overflow: hidden;
+            transition: max-height 0.4s ease-out, opacity 0.3s ease; opacity: 0;
+            width: 100%;
+        }
+         
+        @media (min-width: 1024px) { 
+            #header-description-container { max-height: none !important; opacity: 1 !important; display: block !important; margin-top: 1rem; }
+        }
+
+        #header-description-container.open { max-height: 2000px; opacity: 1; margin-top: 1rem; }
+
+        .filter-btn {
+            font-family: 'Space Mono', monospace; 
+            font-size: clamp(6px, 2vw, 10px);
+            text-transform: uppercase; letter-spacing: 0.05em; cursor: pointer;
+            transition: all 0.2s ease; color: #000;
+            white-space: nowrap;
+        }
+        @media (min-width: 1024px) { 
+            .filter-btn { font-size: 10px; letter-spacing: 0.1em; }
+        }
+        .filter-btn.active { border: 1px solid #000; padding: 2px 6px; color: #9ca3af; }
+        @media (min-width: 1024px) { .filter-btn.active { padding: 4px 12px; } }
+
+        .view-btn {
+            padding: 4px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+            color: #d1d5db;
+        }
+        @media (min-width: 1024px) { .view-btn { padding: 6px; } }
+        .view-btn.active {
+            color: #000;
+            background: #f3f4f6;
+        }
+
+        .fade-out { opacity: 0; }
+
+        /* --- IMAGE CAROUSEL --- */
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .carousel-main-area {
+            position: relative;
+            width: 90%;
+            height: 85%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .carousel-image-wrapper {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            touch-action: pan-y pinch-zoom;
+        }
+
+        .carousel-image-wrapper img {
+            max-width: 80%;
+            max-height: 80%;
+            object-fit: contain;
+        }
+
+        /* Arrows - positioned at vertical center, on sides */
+        .carousel-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.9);
+            border: 1px solid rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: rgba(0,0,0,0.5);
+            z-index: 10;
+        }
+
+        .carousel-arrow:hover {
+            background: #fff;
+            border-color: rgba(0,0,0,0.2);
+            color: rgba(0,0,0,0.8);
+        }
+
+        .carousel-arrow.prev { left: 0; }
+        .carousel-arrow.next { right: 0; }
+
+        .carousel-arrow svg {
+            width: 12px;
+            height: 12px;
+            stroke-width: 2;
+        }
+
+        .carousel-arrow.hidden {
+            display: none;
+        }
+
+        /* Mobile: arrows slightly inside */
+        @media (max-width: 1023px) {
+          .carousel-main-area {
+        width: 95%;
+        height: 82%; /* Biraz daha küçük - dot'lara yer açmak için */
+        margin-top: 10px; /* Üstten biraz aşağı kaydır */
+    }
+    .carousel-arrow {
+        /* OKLARIN DIŞ YUVARLAK BOYUTU */
+        width: 40px;   /* Burayı artırarak yuvarlağı büyütebilirsin (Eski: 26px) */
+        height: 40px;  /* Burayı artırarak yuvarlağı büyütebilirsin (Eski: 26px) */
+    }
+    .carousel-arrow.prev { 
+        left: 40px;    /* Sol okun kenardan uzaklığı (Artırırsan içe gelir) */
+    }
+    .carousel-arrow.next { 
+        right: 40px;   /* Sağ okun kenardan uzaklığı (Artırırsan içe gelir) */
+    }
+    .carousel-arrow svg {
+        /* OK SİMGESİNİN KENDİ BOYUTU */
+        width: 20px;   /* İçteki ok simgesini büyütür (Eski: 10px) */
+        height: 20px;  /* İçteki ok simgesini büyütür (Eski: 10px) */
+    }
+        }
+
+        /* Desktop thumbnails - below the main image (hidden on mobile) */
+        .carousel-thumbnails {
+            display: none;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            margin-top: 8px;
+            width: 90%;
+        }
+
+        @media (min-width: 1024px) {
+            .carousel-thumbnails.show { display: flex; }
+        }
+
+        .carousel-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 2px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 1px solid transparent;
+            opacity: 0.4;
+            transition: all 0.2s ease;
+        }
+
+        .carousel-thumb:hover {
+            opacity: 0.7;
+        }
+
+        .carousel-thumb.active {
+            border-color: #000;
+            opacity: 1;
+        }
+
+        .carousel-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Mobile Carousel Dots */
+        .carousel-mobile-dots {
+            display: none;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            margin-top: 8px;
+            width: 100%;
+        }
+
+        @media (max-width: 1023px) {
+            .carousel-mobile-dots.show { display: flex; }
+        }
+
+        .carousel-dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 1px;
+            background-color: rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .carousel-dot:hover {
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .carousel-dot.active {
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        /* --- LANGUAGE TOGGLE BUTTON --- */
+        .lang-toggle {
+            position: fixed;
+            top: 12px;
+            right: 12px;
+            z-index: 10001;
+            font-family: 'Space Mono', monospace;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            padding: 6px 12px;
+            background: #fff;
+            border: 1px solid #000;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .lang-toggle:hover {
+            background: #000;
+            color: #fff;
+        }
+        @media (min-width: 1024px) {
+            .lang-toggle {
+                top: 20px;
+                right: 20px;
+                font-size: 11px;
+                padding: 8px 16px;
+                border-radius: 8px;
+            }
+        }
+    </style>
+</head>
+<body class="antialiased font-body">
+
+    <!-- Language Toggle Button -->
+    <button id="lang-toggle" class="lang-toggle" onclick="toggleLanguage()">TR</button>
+
+    <div id="loading-overlay">
+        <div class="font-body text-[10px] uppercase tracking-[0.3em] animate-pulse text-gray-400">Contemporary Artifacts</div>
+    </div>
+
+    <!-- Header Section -->
+    <div class="header-bg w-full border-b border-gray-100 overflow-hidden">
+        <div class="max-w-[2400px] h-full mx-auto relative">
+             
+            <div class="logo-desktop-shift logo-mobile-scale pt-6 lg:pt-0">
+                <img src="logo-anim-fuls.gif" alt="Logo Animated">
+            </div>
+
+            <header class="flex flex-col lg:flex-row items-center lg:items-center justify-start lg:justify-end px-4 lg:px-16 h-auto lg:h-full relative z-20 w-full pt-6 pb-2 lg:py-0">
+                <div class="hidden lg:block lg:w-[35%] pointer-events-none"></div>
+
+                <div class="w-full lg:w-[60%] flex flex-col items-center lg:items-start text-center lg:text-left">
+                    <h1 id="site-title" class="font-header text-[11px] tracking-[0.5em] uppercase mb-3 lg:mb-4 text-black">Contemporary Artifacts</h1>
+
+                    <div class="lg:hidden mb-2">
+                        <button onclick="toggleInfo()" class="font-body text-[9px] uppercase tracking-widest border border-black/10 px-4 py-2 hover:bg-black hover:text-white transition-all">
+                            <span id="info-btn-text">Information</span> <span id="info-icon">+</span>
+                        </button>
+                    </div>
+                     
+                    <div id="header-description-container">
+                        <p id="header-description" class="font-body text-[7.5pt] text-gray-600 whitespace-pre-wrap px-4 lg:px-0 text-justify" style="text-align-last: left;"></p>
+                    </div>
+                </div>
+            </header>
+        </div>
+    </div>
+
+    <!-- Control Bar -->
+    <div class="max-w-[2400px] mx-auto px-4 lg:px-16 pt-6 lg:pt-8 pb-4">
+        <div class="flex items-center justify-between gap-2 border-b border-gray-100 pb-4">
+            <div class="flex items-center gap-4 flex-1 min-w-0">
+                <div id="filter-wrapper" class="flex flex-wrap items-center gap-2 lg:gap-6">
+                    <span id="category-label" class="font-header text-[8px] lg:text-[9px] uppercase tracking-widest text-gray-300 whitespace-nowrap">Category:</span>
+                    <div id="filter-list" class="flex flex-wrap items-center gap-x-3 gap-y-2"></div>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-1 lg:gap-2 border border-gray-100 p-1 rounded-md bg-white shrink-0 ml-2">
+                <button onclick="setView('grid')" id="btn-grid" class="view-btn active" title="Grid View">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" class="lg:w-[18px] lg:h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                </button>
+                <button onclick="setView('list')" id="btn-list" class="view-btn" title="List View">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" class="lg:w-[18px] lg:h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="max-w-[2400px] mx-auto px-4 lg:px-16 pb-20 mt-6 lg:mt-10">
+        <div id="main-container" class="transition-opacity duration-300"></div>
+    </div>
+
+    <!-- Modal Overlay -->
+    <div id="detail-modal-overlay">
+        <button id="close-modal" class="absolute top-6 left-6 lg:top-8 lg:left-8 z-[1100] p-2 hover:bg-black hover:text-white transition-all rounded-full bg-white/90 border border-gray-100 shadow-sm">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+        <div id="detail-modal">
+            <div class="relative w-full lg:w-1/2 h-1/2 lg:h-full glass-panel flex items-center justify-center overflow-hidden border-b lg:border-b-0 lg:border-r border-gray-200/20">
+                <div class="carousel-container">
+                    <div class="carousel-main-area">
+                        <button id="carousel-prev" class="carousel-arrow prev hidden" onclick="window.carouselPrev()">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                        </button>
+                        <div id="carousel-image-wrapper" class="carousel-image-wrapper">
+                            <img id="modal-image" src="" alt="" class="fit-image transition-opacity duration-300">
+                        </div>
+                        <button id="carousel-next" class="carousel-arrow next hidden" onclick="window.carouselNext()">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                        </button>
+                    </div>
+                    <div id="carousel-thumbnails" class="carousel-thumbnails"></div>
+                    <div id="carousel-mobile-dots" class="carousel-mobile-dots"></div>
+                </div>
+            </div>
+            <div id="modal-info-scroll" class="w-full lg:w-1/2 h-1/2 lg:h-full overflow-y-auto glass-panel">
+                <div id="modal-details" class="max-w-xl mx-auto p-8 lg:p-24 space-y-10"></div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        // --- LOCAL EXCEL MODE ---
+        const LOCAL_EXCEL_PATH = 'CO-EXCEL-MASTER-5.xlsx';
+
+        let artifacts = [];
+        let filteredArtifacts = [];
+        let currentCategory = 'All';
+        let currentView = 'grid';
+        let isInfoOpen = false;
+        let currentLang = 'en'; // Default language is English
+        let sheetRows = null; // Store raw sheet data for language switching
+        let currentModalDropCode = null; // Track currently open modal item
+        let currentCarouselImages = []; // Array of images for current modal
+        let currentCarouselIndex = 0; // Current image index in carousel
+
+        // Column indices for Turkish data (0-indexed)
+        const TR_COLUMNS = {
+            artworkName: 38,    // AM - ESER İSMİ
+            category: 39,       // AN - KATEGORİ
+            productType: 40,    // AO - ÜRÜN TİPİ
+            color: 41,          // AP - RENK
+            material: 42,       // AQ - MALZEME
+            description: 20,    // U - UZUN ÜRÜN AÇIKLAMASI
+            artistBio: 24,      // Y - UZUN SANATÇI BİYOGRAFİSİ
+            headerDesc: 3,      // D - ANA INFORMATION YAZISI TÜRKÇE
+            price: 43           // AR - FİYAT (TÜRKÇE)
+        };
+
+        // Column indices for English data (0-indexed)
+        const EN_COLUMNS = {
+            artworkName: 3,     // D
+            category: 5,        // F
+            productType: 6,     // G
+            color: 7,           // H
+            material: 8,        // I
+            description: 18,    // S
+            artistBio: 23,      // X
+            headerDesc: 2,      // C
+            price: 16           // Q - PRICE (ENGLISH)
+        };
+
+        // Labels for Turkish
+        const TR_LABELS = {
+            siteTitle: 'Çağdaş Artefaktlar',
+            information: 'Bilgi',
+            categoryLabel: 'Kategori:',
+            image: 'Görsel',
+            studio: 'Stüdyo',
+            artwork: 'Eser',
+            product: 'Ürün',
+            dim: 'Boyut',
+            color: 'Renk',
+            description: 'Açıklama',
+            price: 'Fiyat',
+            category: 'Kategori',
+            productType: 'Ürün Tipi',
+            material: 'Malzeme',
+            edition: 'Edisyon',
+            dimension: 'Boyut (GxDxY)',
+            productDescription: 'Ürün Açıklaması',
+            about: 'Hakkında'
+        };
+
+        // Labels for English
+        const EN_LABELS = {
+            siteTitle: 'Contemporary Artifacts',
+            information: 'Information',
+            categoryLabel: 'Category:',
+            image: 'Image',
+            studio: 'Studio',
+            artwork: 'Artwork',
+            product: 'Product',
+            dim: 'Dim',
+            color: 'Color',
+            description: 'Description',
+            price: 'Price',
+            category: 'Category',
+            productType: 'Product Type',
+            material: 'Material',
+            edition: 'Edition',
+            dimension: 'Dimension (WxDxH)',
+            productDescription: 'Product Description',
+            about: 'About'
+        };
+
+        function getLabels() {
+            return currentLang === 'tr' ? TR_LABELS : EN_LABELS;
+        }
+
+        // Convert newline characters (\n) and literal "\n" strings to <br> for HTML display
+        function nl2br(str) {
+            if (!str) return str;
+            return str.replace(/\\n|\n/g, '<br>');
+        }
+
+        window.toggleLanguage = function() {
+            const btn = document.getElementById('lang-toggle');
+            const container = document.getElementById('main-container');
+
+            container.classList.add('fade-out');
+
+            setTimeout(() => {
+                if (currentLang === 'en') {
+                    currentLang = 'tr';
+                    btn.innerText = 'ENG';
+                } else {
+                    currentLang = 'en';
+                    btn.innerText = 'TR';
+                }
+
+                // Re-process data with new language
+                processSheetData();
+                setupFilters();
+                renderContent();
+                container.classList.remove('fade-out');
+
+                // If modal is open, refresh it with new language
+                if (currentModalDropCode && document.getElementById('detail-modal-overlay').style.display === 'block') {
+                    window.openDetail(currentModalDropCode);
+                }
+            }, 300);
+        };
+
+        window.toggleInfo = function() {
+            const container = document.getElementById('header-description-container');
+            const icon = document.getElementById('info-icon');
+            isInfoOpen = !isInfoOpen;
+            if (isInfoOpen) { container.classList.add('open'); icon.innerText = '-'; }
+            else { container.classList.remove('open'); icon.innerText = '+'; }
+        };
+
+        window.setView = function(view) {
+            if (currentView === view) return;
+            const container = document.getElementById('main-container');
+            container.classList.add('fade-out');
+             
+            setTimeout(() => {
+                currentView = view;
+                document.getElementById('btn-grid').classList.toggle('active', view === 'grid');
+                document.getElementById('btn-list').classList.toggle('active', view === 'list');
+                renderContent();
+                container.classList.remove('fade-out');
+            }, 300);
+        };
+        
+        function processSheetData() {
+            if (!sheetRows) return;
+
+            const cols = currentLang === 'tr' ? TR_COLUMNS : EN_COLUMNS;
+            const labels = getLabels();
+
+            // Update UI labels based on language
+            document.getElementById('site-title').innerText = labels.siteTitle;
+            document.getElementById('info-btn-text').innerText = labels.information;
+            document.getElementById('category-label').innerText = labels.categoryLabel;
+
+            // Update header description based on language
+            // English: C1 (row 0, column C index 2), Turkish: C2 (row 1, column C index 2)
+            const headerRow = currentLang === 'tr' ? 1 : 0;
+            const headerCol = 2; // C kolonu
+            if (sheetRows[headerRow] && sheetRows[headerRow].c[headerCol] && sheetRows[headerRow].c[headerCol].v) {
+                document.getElementById('header-description').innerHTML = nl2br(String(sheetRows[headerRow].c[headerCol].v));
+            }
+
+            artifacts = sheetRows.map(row => {
+                const c = row.c;
+                const val = (idx) => (c[idx] && c[idx].v !== null && c[idx].v !== "null") ? String(c[idx].v) : "";
+
+                const rawScale = (c[26] && c[26].v !== null) ? parseFloat(c[26].v) : 1;
+                const thumbScale = isNaN(rawScale) ? 1 : rawScale;
+
+                // Collect all images (filter out empty ones)
+                const allImages = [val(11), val(34), val(35), val(36)].filter(img => img !== "");
+
+                return {
+                    dropCode: val(1),
+                    artist: val(2),
+                    artworkName: val(cols.artworkName),
+                    category: val(cols.category),
+                    productType: val(cols.productType),
+                    color: val(cols.color),
+                    material: val(cols.material),
+                    imageLink: val(11),
+                    images: allImages, // Array of all available images
+                    thumbnail: val(13),
+                    edition: val(14),
+                    dimensions: val(15),
+                    price: (c[cols.price] && c[cols.price].f) ? c[cols.price].f : val(cols.price),
+                    website: val(17),
+                    description: val(cols.description),
+                    shortDesc: val(19),
+                    artistBio: val(cols.artistBio),
+                    thumbScale: thumbScale
+                };
+            }).filter(i => i.dropCode && i.dropCode.includes("CA_"));
+
+            // Reset filter to All when language changes
+            currentCategory = 'All';
+            filteredArtifacts = artifacts;
+        }
+
+        async function fetchSheetData() {
+            try {
+                const response = await fetch(LOCAL_EXCEL_PATH);
+                const arrayBuffer = await response.arrayBuffer();
+
+                const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+                const firstSheetName = workbook.SheetNames[0];
+                const worksheet = workbook.Sheets[firstSheetName];
+
+                const rawData = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: null });
+
+                sheetRows = rawData.map(row => {
+                    return {
+                        c: row.map(cell => {
+                            return (cell !== null && cell !== undefined) ? { v: cell } : null;
+                        })
+                    };
+                });
+
+                processSheetData();
+                setupFilters();
+                renderContent();
+                document.getElementById('loading-overlay').style.display = 'none';
+            } catch (error) { console.error(error); }
+        }
+
+        function setupFilters() {
+            const categories = ['All', ...new Set(artifacts.map(i => i.category))].filter(c => c);
+            document.getElementById('filter-list').innerHTML = categories.map(cat => `
+                <button onclick="applyFilter('${cat}')" class="filter-btn ${currentCategory === cat ? 'active' : ''}" data-cat="${cat}">${cat}</button>
+            `).join('');
+        }
+
+        window.applyFilter = function(cat) {
+            const container = document.getElementById('main-container');
+            
+            const buttons = document.querySelectorAll('.filter-btn');
+            buttons.forEach(btn => {
+                if (btn.dataset.cat === cat) btn.classList.add('active');
+                else btn.classList.remove('active');
+            });
+
+            container.classList.add('fade-out');
+            setTimeout(() => {
+                currentCategory = cat;
+                filteredArtifacts = cat === 'All' ? artifacts : artifacts.filter(i => i.category === cat);
+                renderContent(); 
+                container.classList.remove('fade-out');
+            }, 300);
+        };
+
+        function renderContent() {
+            const container = document.getElementById('main-container');
+            const labels = getLabels();
+            if (currentView === 'grid') {
+                container.innerHTML = `<div class="dynamic-grid">${filteredArtifacts.map(renderGridItem).join('')}</div>`;
+            } else {
+                container.innerHTML = `
+                <div class="catalog-table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 10%">${labels.image}</th>
+                                <th style="width: 15%">${labels.studio}</th>
+                                <th style="width: 15%">${labels.artwork}</th>
+                                <th style="width: 12%">${labels.product}</th>
+                                <th style="width: 12%">${labels.dim}</th>
+                                <th style="width: 12%">${labels.color}</th>
+                                <th class="hidden lg:table-cell" style="width: 25%">${labels.description}</th>
+                                <th style="width: 12%; text-align: left;">${labels.price}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${filteredArtifacts.map(renderListItem).join('')}
+                        </tbody>
+                    </table>
+                </div>`;
+            }
+        }
+
+        function renderGridItem(item) {
+            // SCALE: Applied as percentage of container, container uses flex-end
+            const scalePct = item.thumbScale * 100;
+            // DYNAMIC CAPTION STYLE: Centered base, justified if multi-line
+            const captionStyle = "text-align: justify; text-align-last: center;";
+
+            return `
+                <div onclick="window.openDetail('${item.dropCode}')" class="cursor-pointer group flex flex-col h-full">
+                    <div class="aspect-square-container overflow-hidden" style="margin-bottom: 17px;">
+                        <img src="${item.thumbnail}" loading="lazy"
+                             style="width: ${scalePct}%; height: ${scalePct}%;"
+                             class="fit-image transition-opacity duration-300">
+                    </div>
+                    <div class="flex flex-col items-center text-center space-y-1">
+                        <span class="font-header font-bold text-[8.5pt] uppercase tracking-wide text-black leading-tight w-full" style="${captionStyle}">${nl2br(item.artist)}</span>
+                        <span class="font-body text-[8pt] text-gray-500 font-light leading-snug w-full" style="${captionStyle}">${nl2br(item.artworkName)}</span>
+                        <div class="font-body text-[7.5pt] text-gray-400 italic flex flex-col items-center space-y-0.5 w-full" style="${captionStyle}">
+                            ${item.productType ? `<span>${nl2br(item.productType)}</span>` : ''}
+                            ${item.dimensions ? `<span>${nl2br(item.dimensions)}</span>` : ''}
+                            ${item.price ? `<span class="font-body text-[7.5pt] text-black not-italic font-normal mt-1">${nl2br(item.price)}</span>` : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderListItem(item) {
+            const scalePct = item.thumbScale * 100;
+            return `
+                <tr onclick="window.openDetail('${item.dropCode}')">
+                    <td class="thumb-cell">
+                        <div class="thumb-inner-container">
+                            <img src="${item.thumbnail}" loading="lazy" 
+                                 style="width: ${scalePct}%; height: ${scalePct}%;"
+                                 class="thumb-img">
+                        </div>
+                    </td>
+                    <td class="font-bold uppercase">${nl2br(item.artist)}</td>
+                    <td class="italic text-gray-600">${nl2br(item.artworkName)}</td>
+                    <td class="uppercase">${nl2br(item.productType)}</td>
+                    <td>${nl2br(item.dimensions)}</td>
+                    <td>${nl2br(item.color)}</td>
+                    <td class="hidden lg:table-cell text-gray-500 leading-tight text-[6pt]">${nl2br(item.shortDesc)}</td>
+                    <td class="font-bold text-left">${nl2br(item.price)}</td>
+                </tr>
+            `;
+        }
+
+        window.openDetail = function(dropCode) {
+            currentModalDropCode = dropCode; // Track current modal item for language switch
+            const item = artifacts.find(a => a.dropCode === dropCode);
+            const labels = getLabels();
+
+            // Setup carousel
+            currentCarouselImages = item.images && item.images.length > 0 ? item.images : [item.imageLink];
+            currentCarouselIndex = 0;
+            updateCarouselDisplay();
+
+            document.getElementById('modal-info-scroll').scrollTop = 0;
+            const modalEl = document.getElementById('detail-modal');
+            if (modalEl) modalEl.scrollTop = 0;
+
+            document.getElementById('modal-details').innerHTML = `
+                <div class="flex flex-col items-start space-y-4 mb-10">
+                    <div class="font-body text-[8px] uppercase tracking-[0.4em] text-gray-300 border-none">${item.dropCode}</div>
+                    <h2 class="font-header text-[18pt] font-bold uppercase leading-tight tracking-tighter">${nl2br(item.artist)}</h2>
+                    <h3 class="font-body text-[16pt] text-gray-400 italic font-light lowercase leading-tight">${nl2br(item.artworkName)}</h3>
+                    ${item.price ? `<div class="font-body text-[10pt] tracking-tighter text-black italic">${nl2br(item.price)}</div>` : ''}
+                </div>
+                <div class="grid grid-cols-2 gap-y-6 gap-x-8 border-y border-gray-200/50 py-10">
+                    ${item.category ? `<div><span class="block font-header text-[8px] text-gray-400 uppercase tracking-widest mb-1">${labels.category}</span><span class="font-body text-[8.5pt] italic">${nl2br(item.category)}</span></div>` : ''}
+                    ${item.productType ? `<div><span class="block font-header text-[8px] text-gray-400 uppercase tracking-widest mb-1">${labels.productType}</span><span class="font-body text-[8.5pt] italic">${nl2br(item.productType)}</span></div>` : ''}
+                    ${item.color ? `<div><span class="block font-header text-[8px] text-gray-400 uppercase tracking-widest mb-1">${labels.color}</span><span class="font-body text-[8.5pt] italic">${nl2br(item.color)}</span></div>` : ''}
+                    ${item.material ? `<div><span class="block font-header text-[8px] text-gray-400 uppercase tracking-widest mb-1">${labels.material}</span><span class="font-body text-[8.5pt] italic">${nl2br(item.material)}</span></div>` : ''}
+                    ${item.edition ? `<div><span class="block font-header text-[8px] text-gray-400 uppercase tracking-widest mb-1">${labels.edition}</span><span class="font-body text-[8.5pt] italic">${nl2br(item.edition)}</span></div>` : ''}
+                    ${item.dimensions ? `<div><span class="block font-header text-[8px] text-gray-400 uppercase tracking-widest mb-1">${labels.dimension}</span><span class="font-body text-[8.5pt] italic">${nl2br(item.dimensions)}</span></div>` : ''}
+                </div>
+                ${item.description ? `<div class="space-y-4 mt-10"><h4 class="font-header text-[9px] uppercase font-bold tracking-[0.2em] text-gray-900">${labels.productDescription}</h4><p class="font-body text-[8.5pt] text-gray-600 italic font-light text-justify" style="text-align-last: left;">${nl2br(item.description)}</p></div>` : ''}
+                ${item.artistBio ? `<div class="space-y-4 mt-10 pt-10 border-t border-gray-200/50"><h4 class="font-header text-[9px] uppercase font-bold tracking-[0.2em] text-gray-400">${labels.about} ${nl2br(item.artist)}</h4><p class="font-body text-[8pt] text-gray-400 italic tracking-tight font-light text-justify" style="text-align-last: left;">${nl2br(item.artistBio)}</p>${item.website ? `<a href="${item.website}" target="_blank" class="inline-block font-body text-[8px] text-gray-400 underline uppercase tracking-widest hover:text-black transition-colors">Website</a>` : ''}</div>` : ''}
+            `;
+            document.getElementById('detail-modal-overlay').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        };
+
+        // Carousel functions
+        function updateCarouselDisplay() {
+            const modalImage = document.getElementById('modal-image');
+            const thumbsContainer = document.getElementById('carousel-thumbnails');
+            const mobileDotsContainer = document.getElementById('carousel-mobile-dots');
+            const prevBtn = document.getElementById('carousel-prev');
+            const nextBtn = document.getElementById('carousel-next');
+
+            const currentImage = currentCarouselImages[currentCarouselIndex];
+            const hasMultipleImages = currentCarouselImages.length > 1;
+            const isFirst = currentCarouselIndex === 0;
+            const isLast = currentCarouselIndex === currentCarouselImages.length - 1;
+
+            // Update image
+            if (modalImage) modalImage.src = currentImage;
+
+            // Show/hide arrows based on position (not circular)
+            if (prevBtn) {
+                prevBtn.classList.toggle('hidden', !hasMultipleImages || isFirst);
+            }
+            if (nextBtn) {
+                nextBtn.classList.toggle('hidden', !hasMultipleImages || isLast);
+            }
+
+            // Desktop thumbnails
+            if (hasMultipleImages) {
+                thumbsContainer.classList.add('show');
+                thumbsContainer.innerHTML = currentCarouselImages.map((img, idx) => `
+                    <div class="carousel-thumb ${idx === currentCarouselIndex ? 'active' : ''}" onclick="window.carouselGoTo(${idx})">
+                        <img src="${img}" alt="Thumbnail ${idx + 1}">
+                    </div>
+                `).join('');
+            } else {
+                thumbsContainer.classList.remove('show');
+                thumbsContainer.innerHTML = '';
+            }
+
+            // Mobile dots
+            if (hasMultipleImages) {
+                mobileDotsContainer.classList.add('show');
+                mobileDotsContainer.innerHTML = currentCarouselImages.map((img, idx) => `
+                    <div class="carousel-dot ${idx === currentCarouselIndex ? 'active' : ''}" onclick="window.carouselGoTo(${idx})"></div>
+                `).join('');
+            } else {
+                mobileDotsContainer.classList.remove('show');
+                mobileDotsContainer.innerHTML = '';
+            }
+        }
+
+        window.carouselNext = function() {
+            if (currentCarouselIndex < currentCarouselImages.length - 1) {
+                currentCarouselIndex++;
+                updateCarouselDisplay();
+            }
+        };
+
+        window.carouselPrev = function() {
+            if (currentCarouselIndex > 0) {
+                currentCarouselIndex--;
+                updateCarouselDisplay();
+            }
+        };
+
+        window.carouselGoTo = function(index) {
+            if (index < 0 || index >= currentCarouselImages.length) return;
+            currentCarouselIndex = index;
+            updateCarouselDisplay();
+        };
+
+        // Swipe support for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            const diff = touchStartX - touchEndX;
+
+            if (Math.abs(diff) > swipeThreshold) {
+                if (diff > 0) {
+                    // Swipe left -> next image
+                    window.carouselNext();
+                } else {
+                    // Swipe right -> prev image
+                    window.carouselPrev();
+                }
+            }
+        }
+
+        // Setup swipe listeners after DOM ready
+        document.addEventListener('DOMContentLoaded', function() {
+            const imageWrapper = document.getElementById('carousel-image-wrapper');
+            if (imageWrapper) {
+                imageWrapper.addEventListener('touchstart', (e) => {
+                    touchStartX = e.changedTouches[0].screenX;
+                }, { passive: true });
+
+                imageWrapper.addEventListener('touchend', (e) => {
+                    touchEndX = e.changedTouches[0].screenX;
+                    handleSwipe();
+                }, { passive: true });
+            }
+        });
+
+        const closeBtn = document.getElementById('close-modal');
+        closeBtn.onclick = () => {
+            document.getElementById('detail-modal-overlay').style.display = 'none';
+            document.body.style.overflow = 'auto';
+            currentModalDropCode = null; // Clear modal tracking
+        };
+        window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeBtn.onclick(); });
+        window.onload = fetchSheetData;
+    </script>
+</body>
+</html>

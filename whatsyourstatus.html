@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>status co | what's your status?</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="weblogo.png">
+    
+    <!-- 1. FONT IMPORT: Capriola ve Space Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Capriola&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        /* ========================================= */
+        /* AYARLAR (RENKLER BURADA) */
+        /* ========================================= */
+        :root {
+            /* 1. RENK AYARLARI */
+            --color-title: #625eaa;    /* Ana Başlık Rengi */
+            --color-subtitle: #b6a6d0; /* Alt Başlık Rengi */
+            --color-text: #28164d;     /* Ana Metin Rengi */
+            --color-ui: #28164d;       /* UI (Butonlar, İkonlar, Scroll, Footer) */
+
+            /* 2. DİĞER AYARLAR */
+            --video-scale: 1.0; 
+            --btn-top-desktop: 15%;
+            --btn-top-mobile: 15%;
+            --btn-scale: 0.6;
+            --font-body: 'Space Mono', monospace;
+        }
+
+        /* TEMEL AYARLAR */
+        body {
+            font-family: var(--font-body);
+            margin: 0;
+            padding: 0;
+            background-color: #fff;
+            overflow-x: hidden;
+        }
+
+        /* YENİ FONT SINIFI */
+        .font-capriola {
+            font-family: 'Capriola', sans-serif;
+        }
+
+        /* Scrollbar Gizleme */
+        html, body {
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        ::-webkit-scrollbar { display: none; }
+
+        /* VİDEO ARKA PLAN */
+        #bg-video-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -10; 
+        }
+
+        .fullscreen-video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(var(--video-scale));
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+            object-position: center center;
+            transition: transform 0.3s ease;
+        }
+
+        #bg-video-repeat {
+            opacity: 0;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        #bg-video-main {
+            z-index: 0;
+        }
+
+        /* REPLAY BUTONU */
+        #replay-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2; 
+            pointer-events: none; 
+        }
+
+        #replay-btn {
+            position: absolute;
+            left: 50%;
+            top: var(--btn-top-desktop);
+            opacity: 0;
+            pointer-events: none; 
+            transform: translate(-50%, -50%) scale(calc(var(--btn-scale) * 0.9));
+            transition: opacity 0.5s ease, transform 0.3s ease;
+            
+            /* UI Rengi Kullanılıyor */
+            border: 1px solid var(--color-ui);
+            color: var(--color-ui);
+            background: rgba(255, 255, 255, 0.4);
+            padding: 12px 30px;
+            border-radius: 9999px;
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 0.2em;
+            cursor: pointer;
+            backdrop-filter: blur(4px);
+        }
+        
+        #replay-btn.visible {
+            opacity: 1;
+            pointer-events: auto; 
+            transform: translate(-50%, -50%) scale(var(--btn-scale));
+        }
+
+        #replay-btn:hover {
+            background: var(--color-ui);
+            color: #fff;
+            transform: translate(-50%, -50%) scale(calc(var(--btn-scale) * 1.05));
+        }
+
+        @media (max-width: 768px) {
+            #replay-btn {
+                top: var(--btn-top-mobile);
+            }
+        }
+
+        /* BLUR KATMANI */
+        #blur-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            height: 100lvh;
+            z-index: 5; 
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            opacity: 0;
+            pointer-events: none; 
+            will-change: opacity;
+            transition: opacity 0.1s linear;
+        }
+
+        /* TEXT FORMATLAMA */
+        .justify-center-last {
+            text-align: justify;
+            -moz-text-align-last: center;
+            text-align-last: center;
+        }
+
+        /* YENİ KÜÇÜK PARAGRAF STİLİ (Requirement #2) */
+        .small-p {
+            font-size: clamp(0.6rem, 1.5vw, 0.75rem) !important; /* Daha küçük font */
+            line-height: 1.4 !important; /* Daha sıkı satır aralığı */
+            opacity: 0.9;
+            margin-bottom: 0.5rem;
+        }
+
+        /* ANİMASYON */
+        .reveal-element {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1.0s ease-out;
+        }
+        .reveal-element.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Scroll İndikatör */
+        #scroll-indicator-container {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 50;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+            pointer-events: none;
+            /* UI Rengi Kullanılıyor */
+            color: var(--color-ui);
+        }
+        
+        .insta-icon {
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            display: inline-block;
+            /* UI Rengi Kullanılıyor */
+            color: var(--color-ui);
+        }
+        .insta-icon:hover {
+            transform: scale(1.1);
+        }
+
+        /* Dil Butonu */
+        .lang-btn {
+            /* UI Rengi Kullanılıyor */
+            border: 1px solid var(--color-ui);
+            color: var(--color-ui);
+            background: rgba(255, 255, 255, 0.5);
+            transition: all 0.3s ease;
+        }
+        .lang-btn:hover {
+            background: var(--color-ui);
+            color: #fff;
+        }
+
+        /* FLUID TYPOGRAPHY */
+        .fluid-p {
+            font-size: clamp(0.65rem, 2vw, 0.9rem);
+        }
+        
+        /* ÖZEL RENK SINIFLARI */
+        .color-title { color: var(--color-title); }
+        .color-subtitle { color: var(--color-subtitle); }
+        .color-text { color: var(--color-text); }
+
+        /* ========================================================= */
+        /* SABİT YÜKSEKLİK İÇİN GRID SİSTEMİ (JUMPING FIX) */
+        /* ========================================================= */
+        .text-grid-container {
+            display: grid;
+            grid-template-areas: "content";
+            align-items: center; /* Dikey ortala */
+            justify-items: center; /* Yatay ortala */
+            width: 100%;
+        }
+
+        .text-grid-item {
+            grid-area: content; /* İki metin de aynı hücrede üst üste */
+            width: 100%;
+            transition: opacity 0.4s ease; /* Yumuşak geçiş */
+        }
+
+        .text-grid-item.hidden-text {
+            opacity: 0;
+            pointer-events: none;
+            z-index: -1;
+            /* Gizli olduğunda yer kaplamaması için display none yerine görsel gizleme yeterli ama grid kullanıyoruz */
+            visibility: hidden; 
+        }
+
+        .text-grid-item.active-text {
+            opacity: 1;
+            z-index: 1;
+            visibility: visible;
+        }
+
+        /* ========================================================= */
+        /* FOOTER STILLERI */
+        /* ========================================================= */
+        #footer {
+            position: fixed;
+            bottom: 4px;
+            left: 0;
+            right: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 60; /* Scroll indicator'ın (50) üzerinde */
+            padding: 0 20px;
+            font-family: var(--font-body);
+        }
+
+        .footer-social {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .footer-social a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .footer-social a:hover {
+            opacity: 0.6;
+        }
+
+        .footer-social svg {
+            width: 16px;
+            height: 16px;
+            /* UI Rengi Kullanılıyor */
+            fill: var(--color-ui); 
+        }
+
+        .footer-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-family: var(--font-body);
+            font-size: 8px;
+            /* UI Rengi Kullanılıyor */
+            color: var(--color-ui);
+            opacity: 0.8;
+        }
+
+        .footer-copyright {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .footer-terms {
+            /* UI Rengi Kullanılıyor */
+            color: var(--color-ui);
+            text-decoration: underline;
+        }
+
+        .footer-terms:hover {
+            opacity: 1;
+            font-weight: bold;
+        }
+
+        /* MOBİL FOOTER UYUMLULUK */
+        @media (max-width: 768px) {
+            #footer {
+                bottom: 4px;
+                padding: 0 12px;
+            }
+
+            .footer-social svg {
+                width: 14px;
+                height: 14px;
+            }
+
+            .footer-right {
+                font-size: 6px;
+                gap: 8px;
+            }
+        }
+
+    </style>
+</head>
+<body class="w-full">
+
+    <!-- 1. FULLSCREEN VIDEO (DOUBLE BUFFER) -->
+    <div id="bg-video-container">
+        <video id="bg-video-main" class="fullscreen-video" playsinline preload="auto" poster="">
+            <source src="https://video.wixstatic.com/video/54a996_66703f0bba0c48259d25a7ad66a8061c/1080p/mp4/file.mp4" type="video/mp4">
+        </video>
+        <video id="bg-video-repeat" class="fullscreen-video" playsinline preload="auto" poster="">
+            <source src="https://video.wixstatic.com/video/54a996_e297ee6f35074d0ca073633292f6333d/1080p/mp4/file.mp4" type="video/mp4">
+        </video>
+    </div>
+
+    <!-- 2. REPLAY BUTTON -->
+    <div id="replay-container">
+        <button id="replay-btn">TEKRAR</button>
+    </div>
+
+    <!-- 3. BLUR LAYER -->
+    <div id="blur-layer"></div>
+
+    <!-- 4. SCROLL INDICATOR -->
+    <!-- Requirement #1: Türkçe Başlangıç -->
+    <div id="scroll-indicator-container" class="text-[9px] tracking-widest uppercase font-bold drop-shadow-sm">DEVAM</div>
+
+    <!-- 5. MAIN CONTENT -->
+    <div class="relative z-10 w-full pointer-events-none" id="main-content">
+        
+        <!-- Boşluk alanı (Video izleme payı) -->
+        <div class="w-full h-[100svh]"></div>
+
+        <!-- 
+            Requirement #3: Desktop Fit - Rahat Sığdırma
+            min-h-[100svh]: İçeriğin minimum ekran boyu kadar olmasını garanti eder.
+            py-[15vh]: Mobile Dikey Denge (%15 boşluk)
+            pb-[18vh]: Mobile Alt Denge + Footer payı
+        -->
+        <section id="textContent" class="w-full min-h-[100svh] flex flex-col items-center justify-center relative overflow-hidden py-[15vh] pb-[18vh] md:py-20 md:pb-24">
+            
+            <!-- 
+               UPDATE: w-[70%] (Mobile için %15 sağ/sol margin garantisi)
+               md:w-full (Masaüstü için full width, container max-w-3xl zaten sınır)
+            -->
+            <div class="max-w-3xl w-[70%] md:w-full flex flex-col items-center justify-center gap-5 md:gap-8 reveal-element relative z-20 mix-blend-multiply pointer-events-auto">
+                
+                <!-- 1. ANA BAŞLIK -->
+                <h1 class="font-capriola text-3xl md:text-5xl tracking-wide color-title text-center w-full mx-auto leading-tight">
+                    what's your status?
+                </h1>
+                
+                <!-- 2. ALT BAŞLIK (Requirement #1: TR Başlangıç) -->
+                <div class="text-grid-container w-full mx-auto italic text-xs md:text-sm font-medium tracking-tight color-subtitle text-center opacity-80">
+                    <p id="subtitle-tr" class="text-grid-item active-text">
+                        ArtShow ile iş birliği, 13-15 Şub 2026
+                    </p>
+                    <p id="subtitle-en" class="text-grid-item hidden-text">
+                        collaboration with ArtShow, 13-15 Feb 2026
+                    </p>
+                </div>
+
+                <!-- 3. METİN ALANI -->
+                <!-- UPDATE: w-full (Parent zaten %70 olduğu için bu full doldurmalı) md:w-[80%] (Desktop'ta biraz daha dar) -->
+                <div class="w-full md:w-[80%] text-grid-container leading-[1.6] md:leading-[1.8] color-text font-medium tracking-tight justify-center-last">
+                    
+                    <!-- TÜRKÇE METİN (Varsayılan Aktif) -->
+                    <div id="content-tr" class="text-grid-item active-text space-y-2 md:space-y-3 fluid-p">
+                        <p>Bu kutudan çekilen her kâğıt koleksiyon değeri taşır; satın alınmış değil, karşılaşılmış bir nesnedir.</p>
+
+                        <p>Top haline getirilmiş ve rastgele seçilen bu parçalar, çağdaş birer şans nesnesi gibi çalışır: sahibine anlık bir statü, düşünce, ruh hali ya da soru atayan küçük bir jest. Çektiğiniz şey rastlantısaldır; ancak çoğu zaman şaşırtıcı şekilde kişisel bir anlam taşır. Zamanlama, merak ve o ana ait olma haliyle şekillenir.</p>
+
+                        <p>Maddi değeri olmayan ve geçici bir formda var olan bu kâğıtlar; taşıdıkları kavram, üretim fikri ve hafıza nedeniyle koleksiyonluk birer esere dönüşür. Ziyaretçi ile sergi arasında kurulan anlık bir ilişkinin artefaktıdır.</p>
+
+                        <p>Nesnelerin genellikle sahiplik üzerinden edinildiği bir ortamda bu üretim, koleksiyon fikrine alternatif bir yaklaşım önerir: satın alma yerine karşılaşma, materyal yerine anlamın kalıcılığı.</p>
+
+                        <!-- Requirement #2: Son 3 paragraf küçük (small-p) -->
+                        <p class="small-p">Kutu içerisinde yer alan ve baskıları yapılmış tüm kâğıtlar için, Art Show x status co adına TEMA Vakfı’na bağış yapılmıştır. Bu jest, nesnenin yalnızca kavramsal değil, ekolojik bir karşılığı da olmasını amaçlar.</p>
+
+                        <p class="small-p">Eğer elinize geçen bu kâğıdı saklayacağınız bir koleksiyon nesnesi olarak görmüyorsanız, anısını kendinize saklayabilir ve kâğıdı status co standına geri bırakabilirsiniz. Böylece nesne, dolaşımını ve anlam üretimini sürdürmeye devam eder.</p>
+
+                        <p class="small-p">Çekilmeyen ve kalan tüm kâğıtlar Art Show sonrasında geri dönüştürülecek ve status co’nun yeni bir projesinde yeniden hayat bulacaktır.</p>
+                    </div>
+
+                    <!-- İNGİLİZCE METİN (Varsayılan Gizli) -->
+                    <div id="content-en" class="text-grid-item hidden-text space-y-2 md:space-y-3 fluid-p">
+                        <p>Every piece of paper drawn from this box is a collectible — not purchased, but encountered.</p>
+
+                        <p>Crumpled and randomly placed, these pieces function as contemporary fortunes: small gestures of chance that momentarily assign a status, a thought, a mood, or a question to their holder. What you draw is arbitrary, yet strangely personal — a reflection shaped by timing, curiosity, and presence.</p>
+
+                        <p>Although immaterial in value and fleeting in form, each paper functions as a collectible because it carries concept, authorship, and memory. It is an artifact of a moment shared between the visitor and the exhibition.</p>
+
+                        <p>In a space where objects are traditionally acquired through ownership, this gesture proposes an alternative form of collecting — one based on encounter rather than transaction, meaning rather than material permanence.</p>
+
+                        <!-- Requirement #2: Son 3 paragraf küçük (small-p) -->
+                        <p class="small-p">For all printed papers placed inside the box, a donation has been made to TEMA Foundation on behalf of Art Show x status co. This gesture aims to give the object not only a conceptual presence, but also an ecological one.</p>
+
+                        <p class="small-p">If you do not consider this paper to be a collectible object you wish to keep, you may keep its memory and return the paper to the status co stand. Thus, the object continues its circulation.</p>
+
+                        <p class="small-p">All papers that remain undrawn will be recycled after Art Show and will be reintroduced within a new project by status co.</p>
+                    </div>
+
+                </div>
+
+                <!-- 4. INSTAGRAM ICON -->
+                <a href="https://instagram.com/_status_co" target="_blank" rel="noopener noreferrer" class="insta-icon" aria-label="Instagram">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 md:w-7 md:h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                    </svg>
+                </a>
+
+                <!-- 5. LANGUAGE BUTTON (Requirement #1: Varsayılan buton ENG çünkü dil TR) -->
+                <button id="lang-toggle" class="lang-btn px-5 py-2 rounded-full text-[10px] md:text-xs font-bold tracking-[0.2em] cursor-pointer backdrop-blur-sm select-none">
+                    ENG
+                </button>
+
+            </div>
+        </section>
+    </div>
+
+    <!-- FOOTER ALANI -->
+    <div id="footer">
+        <div class="footer-social">
+            <a href="mailto:info@status-co.com" target="_blank" title="Email">
+                <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+            </a>
+            <a href="https://instagram.com/_status_co" target="_blank" title="Instagram">
+                <svg viewBox="0 0 24 24"><path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8C4 18.39 5.61 20 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6C20 5.61 18.39 4 16.4 4H7.6m9.65 1.5a1.25 1.25 0 0 1 1.25 1.25A1.25 1.25 0 0 1 17.25 8 1.25 1.25 0 0 1 16 6.75a1.25 1.25 0 0 1 1.25-1.25M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/></svg>
+            </a>
+        </div>
+        <div class="footer-right">
+            <span class="footer-copyright">ALL RIGHTS RESERVED © STATUS CO 2026</span>
+            <a href="https://status-co.com/terms-conditions" target="_blank" class="footer-terms">TERMS AND CONDITIONS</a>
+        </div>
+    </div>
+
+    <script>
+        // =========================================================
+        // GLOBAL DEĞİŞKENLER
+        // =========================================================
+        const videoMain = document.getElementById('bg-video-main');
+        const videoRepeat = document.getElementById('bg-video-repeat');
+        const replayBtn = document.getElementById('replay-btn');
+        const langBtn = document.getElementById('lang-toggle');
+        const scrollIndicator = document.getElementById('scroll-indicator-container');
+
+        let isRepeatMode = false;
+
+        // =========================================================
+        // VIDEO INIT - Her yüklemede sıfırdan başlat
+        // =========================================================
+        function startFresh() {
+            isRepeatMode = false;
+            replayBtn.classList.remove('visible');
+
+            videoRepeat.pause();
+            videoRepeat.currentTime = 0;
+            videoRepeat.style.opacity = '0';
+
+            // Sessiz fallback ile güvenli oynatma (mobil autoplay politikası)
+            videoMain.muted = false;
+            videoMain.play().catch(() => {
+                videoMain.muted = true;
+                videoMain.play().catch(() => {});
+            });
+        }
+
+        // İlk yükleme
+        window.addEventListener('load', startFresh);
+
+        // Mobilde geri/ileri tuşuyla BFCache'den gelince load tetiklenmez
+        window.addEventListener('pageshow', (event) => {
+            if (event.persisted) {
+                videoMain.currentTime = 0;
+                startFresh();
+            }
+        });
+
+        // =========================================================
+        // VIDEO GEÇİŞ MANTIĞI
+        // =========================================================
+        videoMain.addEventListener('ended', () => {
+            replayBtn.classList.add('visible');
+        });
+
+        videoRepeat.addEventListener('ended', () => {
+            replayBtn.classList.add('visible');
+        });
+
+        replayBtn.addEventListener('click', () => {
+            replayBtn.classList.remove('visible');
+            isRepeatMode = true;
+
+            videoRepeat.currentTime = 0;
+            videoRepeat.muted = videoMain.muted;
+            videoRepeat.style.opacity = '1';
+
+            videoRepeat.play().catch(() => {
+                videoRepeat.muted = true;
+                videoRepeat.play().catch(() => {});
+            });
+        });
+
+        // =========================================================
+        // DİL DEĞİŞTİRME MANTIĞI (BAŞLIK + METİN)
+        // =========================================================
+        const contentEn = document.getElementById('content-en');
+        const contentTr = document.getElementById('content-tr');
+        const subtitleEn = document.getElementById('subtitle-en');
+        const subtitleTr = document.getElementById('subtitle-tr');
+
+        langBtn.addEventListener('click', () => {
+            // Kontrol: İngilizce şu an aktif mi? (active-text sınıfı var mı?)
+            if (contentEn.classList.contains('active-text')) {
+                // TÜRÇE'YE GEÇ
+                
+                // 1. İngilizce içerikleri gizle
+                contentEn.classList.remove('active-text');
+                contentEn.classList.add('hidden-text');
+                
+                subtitleEn.classList.remove('active-text');
+                subtitleEn.classList.add('hidden-text');
+
+                // 2. Türkçe içerikleri göster
+                contentTr.classList.remove('hidden-text');
+                contentTr.classList.add('active-text');
+                
+                subtitleTr.classList.remove('hidden-text');
+                subtitleTr.classList.add('active-text');
+
+                // UI Güncelle
+                langBtn.textContent = 'ENG';
+                replayBtn.textContent = 'TEKRAR';
+                scrollIndicator.textContent = 'DEVAM'; // Scroll göstergesi Türkçe
+
+            } else {
+                // İNGİLİZCE'YE GEÇ
+                
+                // 1. Türkçe içerikleri gizle
+                contentTr.classList.remove('active-text');
+                contentTr.classList.add('hidden-text');
+                
+                subtitleTr.classList.remove('active-text');
+                subtitleTr.classList.add('hidden-text');
+
+                // 2. İngilizce içerikleri göster
+                contentEn.classList.remove('hidden-text');
+                contentEn.classList.add('active-text');
+                
+                subtitleEn.classList.remove('hidden-text');
+                subtitleEn.classList.add('active-text');
+
+                // UI Güncelle
+                langBtn.textContent = 'TUR';
+                replayBtn.textContent = 'AGAIN';
+                scrollIndicator.textContent = 'SCROLL'; // Scroll göstergesi İngilizce
+            }
+        });
+
+        // =========================================================
+        // SCROLL & REVEAL
+        // =========================================================
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('visible');
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reveal-element').forEach(el => observer.observe(el));
+
+        const blurLayer = document.getElementById('blur-layer');
+        let hasScrolled = false;
+
+        window.addEventListener('scroll', () => {
+            const scrollY = window.scrollY;
+            const windowHeight = window.innerHeight;
+            const maxScrollHeight = document.documentElement.scrollHeight - windowHeight;
+            let scrollPercent = maxScrollHeight > 0 ? scrollY / maxScrollHeight : 0;
+            
+            if (scrollPercent > 1) scrollPercent = 1;
+            if (scrollPercent < 0) scrollPercent = 0;
+
+            if (!hasScrolled && scrollY > 50) { 
+                scrollIndicator.style.opacity = '0'; 
+                hasScrolled = true; 
+            } else if (scrollY < 50 && hasScrolled) {
+                scrollIndicator.style.opacity = '1';
+                hasScrolled = false;
+            }
+
+            let blurOpacity = scrollPercent * 1.2; 
+            if (blurOpacity > 1) blurOpacity = 1;
+            blurLayer.style.opacity = blurOpacity.toFixed(3);
+        });
+    </script>
+</body>
+</html>
