@@ -32,6 +32,24 @@
             <div class="loader-text">Loading Data</div>
         </div>
     </div>
+    <!-- NAVIGATION -->
+    <nav id="main-nav">
+        <div id="desktop-nav-menu">
+            <a href="https://status-co.com/" class="info-btn">HOME</a>
+            <span class="info-btn nav-current">DROPS</span>
+            <a href="https://status-co.com/whatsyourstatus" class="info-btn">COLLABORATIONS</a>
+            <a href="https://status-co.com/popup" class="info-btn">POP-UPS</a>
+            <a href="https://status-co.com/about" class="info-btn">ABOUT</a>
+        </div>
+        <button id="nav-hamburger" class="info-btn" onclick="toggleNavMenu()">MENU</button>
+        <div id="nav-dropdown">
+            <a href="https://status-co.com/" class="info-btn">HOME</a>
+            <span class="info-btn nav-current">DROPS</span>
+            <a href="https://status-co.com/whatsyourstatus" class="info-btn">COLLABORATIONS</a>
+            <a href="https://status-co.com/popup" class="info-btn">POP-UPS</a>
+            <a href="https://status-co.com/about" class="info-btn">ABOUT</a>
+        </div>
+    </nav>
     <!-- INFO BUTTONS (LEFT SIDE) -->
     <div id="info-buttons">
         <button class="info-btn" id="btn-status" onclick="toggleInfoPanel('status')">
@@ -39,6 +57,7 @@
             <span>STATUS CO</span>
         </button>
         <button class="info-btn" id="btn-about" onclick="toggleInfoPanel('about')">
+            <img class="btn-about-logo" src="weblogo.png" alt="">
             <span>CONTEMPORARY ARTIFACTS</span>
         </button>
     </div>

@@ -196,10 +196,10 @@
             left: 0;
             width: 100%;
             padding: 0 20px;
-            z-index: 1001;
+            z-index: 1002;
             display: flex;
-            justify-content: center; /* Masaüstü menüyü tam ortalamak için */
-            align-items: flex-start;
+            justify-content: center;
+            align-items: center;
             
             /* ÖNEMLİ: Menü en tepedeyken tamamen dışarıda kalacak */
             transform: translateY(-400px); 
@@ -245,17 +245,17 @@
             align-items: center;
             justify-content: center;
             gap: 6px;
-            padding: 8px 16px;
+            padding: 6px 10px;
             background: rgba(41, 23, 77, 0.6);
             backdrop-filter: blur(2px);
             -webkit-backdrop-filter: blur(2px);
             border: 1px solid #ffffff;
             border-radius: 6px;
             cursor: pointer;
-            text-decoration: none; 
+            text-decoration: none;
             font-family: 'Space Mono', monospace;
-            font-size: 10px;
-            color: #ffffff; 
+            font-size: 9px;
+            color: #ffffff;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             transition: all 0.2s ease-in-out;
@@ -308,8 +308,8 @@
             justify-content: flex-end; /* İçindeki metni sağa yaslar */
         }
 
-        /* EKRAN BOYUTU UYARLAMALARI (OG KODDAKİ GİBİ KORUNDU) */
-        @media (max-width: 1024px) {
+        /* EKRAN BOYUTU UYARLAMALARI */
+        @media (max-width: 768px) {
             #main-header {
                 top: 12px;
                 padding: 0 12px;
@@ -318,23 +318,23 @@
                 left: 12px;
             }
             #desktop-nav {
-                display: none; /* Mobilde desktop menüyü gizle */
+                display: none;
             }
             #mobile-nav-container {
-                display: flex; /* Mobilde mobil menüyü göster */
+                display: flex;
                 right: 12px;
             }
             .side-logo {
-                width: 32px; /* Logo boyutunu mobil için küçült */
+                width: 32px;
             }
             .info-btn {
-                font-size: clamp(6px, 1.8vw, 9px); 
-                padding: 6px clamp(4px, 1.2vw, 10px); 
-                border-radius: 4px;
-                letter-spacing: 0.2px; 
+                padding: clamp(4px, 1.5vw, 8px) clamp(5px, 2vw, 10px);
+                font-size: clamp(5px, 1.8vw, 7px);
+                flex-shrink: 1;
+                min-width: 0;
             }
             #mobile-menu-items .info-btn {
-                width: 140px; /* Mobilde açılır kutu genişliği */
+                width: auto;
             }
         }
 
