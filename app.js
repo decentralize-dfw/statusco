@@ -810,37 +810,14 @@ function positionRightToggles() {
         if (row0) { row0.style.position = 'relative'; row0.style.top = ''; }
         if (row1) { row1.style.position = 'relative'; row1.style.top = ''; }
         if (row2) { row2.style.position = 'relative'; row2.style.top = ''; }
-        rightToggles.style.flexDirection = 'column';
-        rightToggles.style.gap = '6px';
-        rightToggles.style.alignItems = 'flex-end';
-        rightToggles.style.right = '12px';
-        rightToggles.style.left = '';
-        rightToggles.style.transform = '';
-        const bar = document.getElementById('marquee-bar');
-        const infoButtons = document.getElementById('info-buttons');
-        // Measure track-center offset from container top (icons excluded)
-        const g3dTrackEl = document.querySelector('#grid-3d-toggle .grid-3d-track');
-        rightToggles.style.top = '0px'; // temp position to measure
-        let trackCenterOffset = 0;
-        if (g3dTrackEl) {
-            const tRect = g3dTrackEl.getBoundingClientRect();
-            trackCenterOffset = tRect.top + tRect.height / 2; // offset from viewport top = offset from container top (since top=0)
-        }
-        if (bar && bar.style.display !== 'none') {
-            if (infoButtons && g3dTrackEl) {
-                const btnRect = infoButtons.getBoundingClientRect();
-                const btnCenterY = btnRect.top + btnRect.height / 2;
-                const marqueBottom = bar.getBoundingClientRect().bottom;
-                const targetTop = Math.max(marqueBottom + 8, btnCenterY - trackCenterOffset);
-                rightToggles.style.top = targetTop + 'px';
-            } else {
-                rightToggles.style.top = (bar.getBoundingClientRect().bottom + 8) + 'px';
-            }
-        } else if (infoButtons && g3dTrackEl) {
-            const btnRect = infoButtons.getBoundingClientRect();
-            const btnCenterY = btnRect.top + btnRect.height / 2;
-            rightToggles.style.top = (btnCenterY - trackCenterOffset) + 'px';
-        }
+        // Mobilde: yatay sıra, yatay ortada, üstte sabit
+        rightToggles.style.flexDirection = 'row';
+        rightToggles.style.gap = '8px';
+        rightToggles.style.alignItems = 'center';
+        rightToggles.style.right = '';
+        rightToggles.style.left = '50%';
+        rightToggles.style.transform = 'translateX(-50%)';
+        rightToggles.style.top = '12px';
         return;
     }
     // Desktop: row0=grid/3D, row1=wire, row2=camera dots
@@ -1650,8 +1627,8 @@ window.toggleInfoPanel = function(panelType) {
         }
     }
     currentInfoPanel = panelType;
-    btnStatus.classList.toggle('active', panelType === 'status');
-    btnAbout.classList.toggle('active', panelType === 'about');
+    if (btnStatus) btnStatus.classList.toggle('active', panelType === 'status');
+    if (btnAbout) btnAbout.classList.toggle('active', panelType === 'about');
     const content = document.getElementById('info-panel-content');
     if (panelType === 'status') {
         panelTitle.textContent = 'STATUS CO';
@@ -1672,9 +1649,14 @@ window.closeInfoPanel = function() {
     const btnStatus = document.getElementById('btn-status');
     const btnAbout = document.getElementById('btn-about');
     infoPanel.classList.remove('open');
-    btnStatus.classList.remove('active');
-    btnAbout.classList.remove('active');
+    if (btnStatus) btnStatus.classList.remove('active');
+    if (btnAbout) btnAbout.classList.remove('active');
     currentInfoPanel = null;
+};
+window.toggleNavMenu = function() {
+    const dropdown = document.getElementById('nav-dropdown');
+    if (!dropdown) return;
+    dropdown.classList.toggle('open');
 };
 function updateOrthoFrustum() {
     if (!cameraOrtho) return;
@@ -1746,13 +1728,7 @@ function positionMarquee() {
     if (!infoButtons) return;
     if (isMobileNow && !mobileMarqueeEnabled) {
         bar.style.display = 'none';
-        infoButtons.style.left = '50%';
-        infoButtons.style.transform = 'translateX(-50%)';
         return;
-    }
-    if (isMobileNow) {
-        infoButtons.style.left = '12px';
-        infoButtons.style.transform = 'none';
     }
     bar.style.display = 'flex';
     const leftEnd = infoButtons.getBoundingClientRect().right + 15;

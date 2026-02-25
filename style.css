@@ -394,9 +394,64 @@ html, body {
     letter-spacing: 1px;
     text-transform: uppercase;
 }
-#info-buttons {
+/* ===== NAVIGATION BAR ===== */
+#main-nav {
     position: fixed;
     top: 20px;
+    left: 0;
+    right: 0;
+    z-index: 1002;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+    padding: 0 20px;
+}
+#desktop-nav-menu {
+    display: flex;
+    flex-direction: row;
+    gap: 6px;
+    pointer-events: auto;
+}
+#desktop-nav-menu .info-btn,
+#nav-dropdown .info-btn {
+    text-decoration: none;
+    color: #000;
+}
+.nav-current {
+    cursor: default;
+    pointer-events: none;
+    opacity: 0.45;
+}
+#nav-hamburger {
+    display: none;
+    pointer-events: auto;
+    align-items: center;
+    justify-content: center;
+}
+#nav-dropdown {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    position: fixed;
+    top: 46px;
+    right: 12px;
+    pointer-events: auto;
+    z-index: 1003;
+}
+#nav-dropdown.open {
+    display: flex;
+}
+.btn-about-logo {
+    display: none;
+    width: 14px;
+    height: 14px;
+    object-fit: contain;
+}
+/* ============================= */
+#info-buttons {
+    position: fixed;
+    top: 51px;
     left: 20px;
     z-index: 1001;
     display: flex;
@@ -1058,7 +1113,7 @@ html, body {
 }
 #marquee-bar {
     position: fixed;
-    top: 20px;
+    top: 80px;
     z-index: 999;
     overflow: hidden;
     white-space: nowrap;
@@ -1405,6 +1460,18 @@ html, body {
         z-index: 100;
     }
     #info-panel.open { transform: translateY(0); }
+    /* NAV: mobile de sadece hamburger görünür */
+    #main-nav {
+        top: 12px;
+        justify-content: flex-end;
+        padding: 0 12px;
+    }
+    #desktop-nav-menu { display: none; }
+    #nav-hamburger { display: flex; }
+    #nav-dropdown { top: 44px; right: 12px; }
+    /* INFO BUTTONS: mobile de STATUS CO gizlenir, btn-about logo alır */
+    #btn-status { display: none; }
+    .btn-about-logo { display: inline-block; }
     #info-buttons {
         top: 12px;
         left: 12px;
@@ -1412,23 +1479,35 @@ html, body {
         flex-direction: row;
         gap: 6px;
         width: auto;
-        max-width: 50vw;
+        max-width: calc(50vw - 20px);
     }
+    /* Tüm info-btn leri parametrik olarak küçüt, örtüşme olmasın */
     .info-btn {
-        padding: 8px 10px;
-        font-size: 7px;
-        flex-shrink: 0;
+        padding: clamp(4px, 1.5vw, 8px) clamp(5px, 2vw, 10px);
+        font-size: clamp(5px, 1.8vw, 7px);
+        flex-shrink: 1;
+        min-width: 0;
     }
-    .info-btn img { width: 12px; height: 12px; }
+    .info-btn img, .info-btn svg { width: 12px; height: 12px; flex-shrink: 0; }
+    .btn-about-logo { width: 12px; height: 12px; flex-shrink: 0; }
+    #info-buttons .info-btn span {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        min-width: 0;
+    }
     #ui-container { display: none; }
     #ui-container.editor-visible { display: flex !important; }
+    /* RIGHT-TOGGLES: tek satır, yatay, ortalanmış */
     #right-toggles {
         position: fixed;
-        top: auto;
-        right: 12px;
-        flex-direction: column;
-        align-items: flex-end;
-        gap: 6px;
+        top: 12px;
+        left: 50%;
+        right: auto;
+        transform: translateX(-50%);
+        flex-direction: row;
+        align-items: center;
+        gap: 8px;
     }
     #right-toggle-row0 { display: flex; position: relative !important; top: auto !important; }
     #right-toggle-row1 { display: flex; position: relative !important; top: auto !important; }
