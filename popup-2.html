@@ -501,8 +501,6 @@
             top: 20px;
             right: 20px;
             z-index: 9999; /* Yükleme ekranının altında, içeriklerin üstünde kalır */
-            
-            /* Menü butonlarıyla birebir aynı stiller */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -577,22 +575,20 @@
     <div class="header-bg w-full border-b border-gray-100 overflow-hidden">
         <div class="max-w-[2400px] h-full mx-auto relative">
             
-            <!-- Desktop GIF -->
+            <!-- SADECE DESKTOP'TA GÖRÜNEN GIF -->
             <div class="logo-desktop-shift hidden lg:flex pt-6 lg:pt-0">
                 <img src="logo-anim-fuls.gif" alt="Logo Animated" onerror="this.style.display='none'">
             </div>
             
-            <!-- Mobile Header Content -->
-            <header class="flex flex-col lg:flex-row items-center lg:items-center justify-center lg:justify-end px-4 lg:px-16 min-h-[220px] lg:min-h-0 h-auto lg:h-full relative z-20 w-full py-10 lg:py-0">
+            <!-- MOBİL İÇİN TAM ORTALANMIŞ, DESKTOP İÇİN ORİJİNAL HİZADA HEADER İÇERİĞİ -->
+            <header class="flex flex-col lg:flex-row items-center justify-center lg:items-center lg:justify-end px-4 lg:px-16 min-h-[160px] lg:min-h-0 h-auto lg:h-full relative z-20 w-full py-6 lg:py-0">
                 <div class="hidden lg:block lg:w-[35%] pointer-events-none"></div>
-                <div class="w-full lg:w-[60%] flex flex-col items-center lg:items-start text-center lg:text-left">
+                <div class="w-full lg:w-[60%] flex flex-col items-center justify-center lg:items-start text-center lg:text-left h-full">
                     <h1 id="site-title" class="font-header text-[11px] tracking-[0.5em] uppercase mb-4 lg:mb-4 text-black">POP UP 001: ARTSHOW</h1>
                     
-                    <!-- Mobil: TR ve Information Tuşları Yan Yana -->
+                    <!-- Mobil: TR ve Information Tuşları Yanyana Birebir Aynı Boyutta -->
                     <div class="flex items-center justify-center gap-3 lg:hidden mb-2">
-                        <button id="lang-toggle-mobile" onclick="toggleLanguage()" class="font-body text-[9px] uppercase tracking-widest border border-black/10 px-4 py-2 hover:bg-black hover:text-white transition-all">
-                            TR
-                        </button>
+                        <button id="lang-toggle-mobile" onclick="toggleLanguage()" class="font-body text-[9px] uppercase tracking-widest border border-black/10 px-4 py-2 hover:bg-black hover:text-white transition-all">TR</button>
                         <button onclick="toggleInfo()" class="font-body text-[9px] uppercase tracking-widest border border-black/10 px-4 py-2 hover:bg-black hover:text-white transition-all">
                             <span id="info-btn-text">Information</span> <span id="info-icon">+</span>
                         </button>
