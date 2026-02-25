@@ -346,6 +346,9 @@
             transition: max-height 0.4s ease-out, opacity 0.3s ease; opacity: 0;
             width: 100%;
         }
+        @media (min-width: 1024px) { 
+            #header-description-container { max-height: none !important; opacity: 1 !important; display: block !important; margin-top: 1rem; }
+        }
 
         #header-description-container.open { max-height: 2000px; opacity: 1; margin-top: 1rem; }
 
@@ -491,6 +494,36 @@
 
         .carousel-dot:hover { background-color: rgba(0, 0, 0, 0.4); }
         .carousel-dot.active { background-color: rgba(0, 0, 0, 0.7); }
+
+        /* --- DESKTOP LANGUAGE TOGGLE BUTTON (ESKI YERİNDE: RIGHT 20PX, TOP 20PX) --- */
+        .lang-toggle-desktop {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999; /* Yükleme ekranının altında kalır */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 6px 10px;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(2px);
+            -webkit-backdrop-filter: blur(2px);
+            border: 1px solid #000000;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Space Mono', monospace;
+            font-size: 9px;
+            color: #000000;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+        
+        /* Desktop Hover iptali */
+        .lang-toggle-desktop:hover {
+            border-color: #000000;
+        }
     </style>
 </head>
 <body class="antialiased font-body">
@@ -530,6 +563,9 @@
 
     </header>
 
+    <!-- Desktop Language Toggle Button (Eski yerine alındı, menü fontunda) -->
+    <button id="lang-toggle-desktop" class="lang-toggle-desktop hidden lg:flex outline-none" onclick="toggleLanguage()">TR</button>
+
     <div id="loading-overlay">
         <div class="font-body text-[10px] uppercase tracking-[0.3em] animate-pulse text-gray-400">POP UP 001: ARTSHOW</div>
     </div>
@@ -538,22 +574,25 @@
     <div class="header-bg w-full border-b border-gray-100 overflow-hidden">
         <div class="max-w-[2400px] h-full mx-auto relative">
             
-            <!-- SADECE DESKTOP'TA GÖRÜNEN GIF (ORİJİNAL YERİ) -->
+            <!-- SADECE DESKTOP'TA GÖRÜNEN GIF (Yazı ve hizalama orijinal yerinde) -->
             <div class="logo-desktop-shift hidden lg:flex pt-6 lg:pt-0">
                 <img src="logo-anim-fuls.gif" alt="Logo Animated" onerror="this.style.display='none'">
             </div>
             
-            <!-- MOBİL İÇİN TAM ORTALANMIŞ (320px yükseklik), DESKTOP İÇİN ORİJİNAL HİZADA HEADER İÇERİĞİ -->
-            <header class="flex flex-col lg:flex-row items-center justify-center lg:items-center lg:justify-end px-4 lg:px-16 min-h-[320px] lg:min-h-0 h-auto lg:h-full relative z-20 w-full py-6 lg:py-0">
+            <!-- MOBİL İÇİN YUKARIDAN BAŞLAYIP AŞAĞI AÇILAN, DESKTOP İÇİN ORİJİNAL HİZADA HEADER İÇERİĞİ -->
+            <header class="flex flex-col lg:flex-row items-center justify-start lg:justify-end px-4 lg:px-16 pt-[120px] pb-10 lg:pt-6 lg:pb-0 h-auto lg:h-full relative z-20 w-full">
                 <div class="hidden lg:block lg:w-[35%] pointer-events-none"></div>
-                <div class="w-full lg:w-[60%] flex flex-col items-center justify-center lg:items-start text-center lg:text-left h-full">
-                    <h1 id="site-title" class="font-header text-[11px] tracking-[0.5em] uppercase mb-4 lg:mb-4 text-black">POP UP 001: ARTSHOW</h1>
+                <div class="w-full lg:w-[60%] flex flex-col items-center lg:items-start text-center lg:text-left h-full">
+                    <h1 id="site-title" class="font-header text-[11px] tracking-[0.5em] uppercase mb-4 text-black">POP UP 001: ARTSHOW</h1>
                     
-                    <!-- TR ve Information Tuşları Yanyana Birebir Aynı Boyutta, Desktop ve Mobilde Aynı Yerde -->
-                    <div class="flex items-center justify-center lg:justify-start gap-3 mb-2">
-                        <button id="lang-toggle-btn" onclick="toggleLanguage()" class="font-body text-[9px] uppercase tracking-widest border border-black/10 px-4 py-2 text-black cursor-pointer">TR</button>
-                        <button onclick="toggleInfo()" class="font-body text-[9px] uppercase tracking-widest border border-black/10 px-4 py-2 text-black cursor-pointer">
+                    <!-- Mobil: Ortada Information Tuşu, Sağ Kenarda TR Tuşu (Hover Kapalı) -->
+                    <div class="w-full relative flex justify-center items-center lg:hidden mb-2">
+                        <button onclick="toggleInfo()" class="font-body text-[9px] uppercase tracking-widest border border-black/10 px-4 py-2 text-black bg-white outline-none cursor-pointer">
                             <span id="info-btn-text">Information</span> <span id="info-icon">+</span>
+                        </button>
+                        <!-- Sağ kenara dayalı TR butonu (Menüdeki 12px right boşluğuyla birebir aynı hizada) -->
+                        <button id="lang-toggle-mobile" onclick="toggleLanguage()" class="absolute font-body text-[9px] uppercase tracking-widest border border-black/10 px-4 py-2 text-black bg-white outline-none cursor-pointer" style="right: -4px;">
+                            TR
                         </button>
                     </div>
                     
@@ -566,8 +605,8 @@
         </div>
     </div>
 
-    <!-- Control Bar (Kategori Üstü Çizgi Boşluğu İki Katına Çıkarıldı pt-12 lg:pt-16) -->
-    <div class="max-w-[2400px] mx-auto px-4 lg:px-16 pt-12 lg:pt-16 pb-4">
+    <!-- Control Bar (Kategori Üstü Çizgi Boşluğu İki Katına Çıkarıldı pt-24 lg:pt-32) -->
+    <div class="max-w-[2400px] mx-auto px-4 lg:px-16 pt-24 lg:pt-32 pb-4">
         <div class="flex items-center border-b border-gray-100 pb-4">
             <div class="flex items-center gap-4 flex-1 min-w-0">
                 <div id="filter-wrapper" class="flex flex-wrap items-center gap-2 lg:gap-6">
@@ -603,8 +642,8 @@
 
     <!-- Modal Overlay -->
     <div id="detail-modal-overlay">
-        <!-- SOL ALT KÖŞEDE ÇOK UFAK MESAFELİ 6PX KOD (YENİ EKLENDİ) -->
-        <div id="modal-drop-code" class="absolute bottom-4 left-4 lg:bottom-6 lg:left-6 z-[1100] text-[6px] font-body font-bold uppercase text-black tracking-wider"></div>
+        <!-- SOL ALT KÖŞEDE ÇOK UFAK MESAFELİ 6PX KOD (YENİ EKLENDİ - BOTTOM-2 LEFT-2) -->
+        <div id="modal-drop-code" class="absolute bottom-2 left-2 lg:bottom-4 lg:left-4 z-[1100] text-[6px] font-body font-bold uppercase text-black tracking-wider"></div>
         
         <button id="close-modal" class="absolute top-6 left-6 lg:top-8 lg:left-8 z-[1100] p-2 hover:bg-black hover:text-white transition-all rounded-full bg-white/90 border border-gray-100 shadow-sm">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
@@ -685,7 +724,8 @@
         }
 
         window.toggleLanguage = function() {
-            const btn = document.getElementById('lang-toggle-btn');
+            const btnDesktop = document.getElementById('lang-toggle-desktop');
+            const btnMobile = document.getElementById('lang-toggle-mobile');
             const container = document.getElementById('main-container');
 
             container.classList.add('fade-out');
@@ -693,10 +733,12 @@
             setTimeout(() => {
                 if (currentLang === 'en') {
                     currentLang = 'tr';
-                    if(btn) btn.innerText = 'ENG';
+                    if(btnDesktop) btnDesktop.innerText = 'ENG';
+                    if(btnMobile) btnMobile.innerText = 'ENG';
                 } else {
                     currentLang = 'en';
-                    if(btn) btn.innerText = 'TR';
+                    if(btnDesktop) btnDesktop.innerText = 'TR';
+                    if(btnMobile) btnMobile.innerText = 'TR';
                 }
 
                 processSheetData();
