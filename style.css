@@ -428,6 +428,7 @@ html, body {
     pointer-events: auto;
     align-items: center;
     justify-content: center;
+    font-weight: 700;
 }
 #nav-dropdown {
     display: none;
@@ -451,7 +452,7 @@ html, body {
 /* ============================= */
 #info-buttons {
     position: fixed;
-    top: 51px;
+    top: 20px;
     left: 20px;
     z-index: 1001;
     display: flex;
@@ -1113,7 +1114,7 @@ html, body {
 }
 #marquee-bar {
     position: fixed;
-    top: 80px;
+    top: 49px;
     z-index: 999;
     overflow: hidden;
     white-space: nowrap;
@@ -1498,16 +1499,20 @@ html, body {
     }
     #ui-container { display: none; }
     #ui-container.editor-visible { display: flex !important; }
-    /* RIGHT-TOGGLES: tek satır, yatay, ortalanmış */
+    /* RIGHT-TOGGLES: tek satır, yatay, sağ hizalı, btn-about'un altında (top JS tarafından set edilir) */
     #right-toggles {
         position: fixed;
-        top: 12px;
-        left: 50%;
-        right: auto;
-        transform: translateX(-50%);
+        top: 44px;
+        left: auto;
+        right: 12px;
+        transform: none;
         flex-direction: row;
-        align-items: center;
+        align-items: flex-start;
         gap: 8px;
+    }
+    /* Grid-3d ikonları track'in ALTINA gelsin (overlap yok) */
+    #grid-3d-toggle {
+        flex-direction: column-reverse;
     }
     #right-toggle-row0 { display: flex; position: relative !important; top: auto !important; }
     #right-toggle-row1 { display: flex; position: relative !important; top: auto !important; }

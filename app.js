@@ -810,14 +810,21 @@ function positionRightToggles() {
         if (row0) { row0.style.position = 'relative'; row0.style.top = ''; }
         if (row1) { row1.style.position = 'relative'; row1.style.top = ''; }
         if (row2) { row2.style.position = 'relative'; row2.style.top = ''; }
-        // Mobilde: yatay sıra, yatay ortada, üstte sabit
+        // Mobilde: yatay sıra, sağ hizalı, info-buttons'ın altında
         rightToggles.style.flexDirection = 'row';
         rightToggles.style.gap = '8px';
-        rightToggles.style.alignItems = 'center';
-        rightToggles.style.right = '';
-        rightToggles.style.left = '50%';
-        rightToggles.style.transform = 'translateX(-50%)';
-        rightToggles.style.top = '12px';
+        rightToggles.style.alignItems = 'flex-start';
+        rightToggles.style.right = '12px';
+        rightToggles.style.left = '';
+        rightToggles.style.transform = '';
+        // info-buttons'ın altına konumlandır
+        const infoButtons = document.getElementById('info-buttons');
+        if (infoButtons) {
+            const infoRect = infoButtons.getBoundingClientRect();
+            rightToggles.style.top = (infoRect.bottom + 6) + 'px';
+        } else {
+            rightToggles.style.top = '44px';
+        }
         return;
     }
     // Desktop: row0=grid/3D, row1=wire, row2=camera dots
