@@ -1499,11 +1499,11 @@ html, body {
     }
     #ui-container { display: none; }
     #ui-container.editor-visible { display: flex !important; }
-    /* RIGHT-TOGGLES: tek satır, yatay, SOL hizalı, btn-about'un altında (top JS tarafından set edilir) */
+    /* RIGHT-TOGGLES: tek satır, yatay; left ve top JS tarafından set edilir */
     #right-toggles {
         position: fixed;
         top: 44px;
-        left: 12px;
+        left: auto;
         right: auto;
         transform: none;
         flex-direction: row;
@@ -1549,6 +1549,7 @@ html, body {
         --panel-media-spacing: 30px;
         --panel-content-padding: 1.5rem;
         --panel-title-font-size: 1.6rem;
+        --wire-toggle-size: 9.6px;
     }
     .panel-artist { font-size: 0.8rem; }
     .panel-desc-header { font-size: 0.72rem; }
