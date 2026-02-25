@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>status co | Pop-up 001: Artshot</title>
+    <!-- FAVICON -->
+    <link rel="icon" type="image/png" href="weblogo.png">
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Capriola&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #ffffff;
+            color: #1a1a1a;
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* --- DESKTOP BANNER & LOGO (1024px+) --- */
+        @media (min-width: 1024px) {
+            .header-bg {
+                position: relative;
+                background-image: url('https://raw.githubusercontent.com/decentralize-dfw/co-contemporaryartifacts-glb/main/productsbanner-pop-up.png');
+                background-size: cover;
+                background-position: 25.43% 60.16%;
+                background-repeat: no-repeat;
+                aspect-ratio: 2556 / 748;
+                max-height: 75vh;
+            }
+            .logo-desktop-shift {
+                position: absolute;
+                left: 19%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+                z-index: 10;
+                width: 10%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+        }
+
+        /* --- MOBILE LOGO & HEADER --- */
+        @media (max-width: 1023px) {
+            .logo-mobile-scale {
+                width: 15%;
+                margin: 0 auto;
+                display: block;
+            }
+        }
+
+        .logo-desktop-shift img, .logo-mobile-scale img {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+        }
+
+        /* --- TYPOGRAPHY --- */
+        .font-header { font-family: 'Capriola', sans-serif; }
+        .font-body { 
+            font-family: 'Space Mono', monospace; 
+            letter-spacing: -0.2px;
+            line-height: 1.2;
+        }
+
+        /* --- GRID SYSTEM --- */
+        .dynamic-grid {
+            display: grid;
+            gap: 1rem;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            transition: opacity 0.4s ease-in-out;
+        }
+
+        @media (min-width: 1024px) { 
+            .dynamic-grid { 
+                gap: 3rem;
+                grid-template-columns: repeat(5, minmax(0, 1fr)); 
+            } 
+        }
+
+        /* --- UI COMPONENTS --- */
+        .aspect-square-container {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            display: flex; 
+            align-items: flex-end; /* ALIGN TO BOTTOM - GRID */
+            justify-content: center;
+            overflow: hidden; 
+            background-color: transparent;
+        }
+
+        .fit-image { 
+            width: 80%; 
+            height: 80%; 
+            object-fit: contain; 
+            object-position: bottom; /* ENSURE ALIGNMENT */
+        }
+
+        #loading-overlay {
+            position: fixed; inset: 0; background: white; z-index: 10000;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        #detail-modal-overlay {
+            position: fixed; inset: 0;
+            background-color: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            z-index: 1000; display: none; overflow: hidden;
+        }
+
+        #detail-modal {
+            width: 100vw; height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden;
+        }
+
+        .glass-panel {
+            background-color: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+        }
+
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #000; }
+
+        #header-description-container {
+            max-height: 0; overflow: hidden;
+            transition: max-height 0.4s ease-out, opacity 0.3s ease; opacity: 0;
+            width: 100%;
+        }
+        @media (min-width: 1024px) { 
+            #header-description-container { max-height: none !important; opacity: 1 !important; display: block !important; margin-top: 1rem; }
+        }
+
+        #header-description-container.open { max-height: 2000px; opacity: 1; margin-top: 1rem; }
+
+        .filter-btn {
+            font-family: 'Space Mono', monospace; 
+            font-size: clamp(6px, 2vw, 10px);
+            text-transform: uppercase; letter-spacing: 0.05em; cursor: pointer;
+            transition: all 0.2s ease; color: #000;
+            white-space: nowrap;
+        }
+        @media (min-width: 1024px) { 
+            .filter-btn { font-size: 10px; letter-spacing: 0.1em; }
+        }
+        .filter-btn.active { border: 1px solid #000; padding: 2px 6px; color: #9ca3af; }
+        @media (min-width: 1024px) { .filter-btn.active { padding: 4px 12px; } }
+
+        .fade-out { opacity: 0; }
+
+        /* --- IMAGE CAROUSEL & MODAL IMAGE SETTINGS --- */
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .carousel-main-area {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .carousel-image-wrapper {
+            width: 80vw;
+            height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            touch-action: pan-y pinch-zoom;
+        }
+
+        .carousel-image-wrapper img {
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            object-fit: contain; /* Ensures the image fits the 80% area without cropping */
+        }
+
+        /* Arrows - positioned at vertical center, on sides */
+        .carousel-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.9);
+            border: 1px solid rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: rgba(0,0,0,0.5);
+            z-index: 10;
+        }
+
+        .carousel-arrow:hover {
+            background: #fff;
+            border-color: rgba(0,0,0,0.2);
+            color: rgba(0,0,0,0.8);
+        }
+
+        .carousel-arrow.prev { left: 4vw; }
+        .carousel-arrow.next { right: 4vw; }
+
+        .carousel-arrow svg {
+            width: 20px;
+            height: 20px;
+            stroke-width: 2;
+        }
+
+        .carousel-arrow.hidden {
+            display: none;
+        }
+
+        /* Desktop thumbnails - below the main image (hidden on mobile) */
+        .carousel-thumbnails {
+            display: none;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 2vh;
+            width: 90%;
+        }
+
+        @media (min-width: 1024px) {
+            .carousel-thumbnails.show { display: flex; position: absolute; bottom: 20px; }
+            .carousel-arrow.prev { left: 5vw; }
+            .carousel-arrow.next { right: 5vw; }
+        }
+
+        .carousel-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 2px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 1px solid transparent;
+            opacity: 0.4;
+            transition: all 0.2s ease;
+        }
+
+        .carousel-thumb:hover {
+            opacity: 0.7;
+        }
+
+        .carousel-thumb.active {
+            border-color: #000;
+            opacity: 1;
+        }
+
+        .carousel-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Mobile Carousel Dots */
+        .carousel-mobile-dots {
+            display: none;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+        }
+
+        @media (max-width: 1023px) {
+            .carousel-mobile-dots.show { display: flex; }
+        }
+
+        .carousel-dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 1px;
+            background-color: rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .carousel-dot:hover {
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .carousel-dot.active {
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        /* --- LANGUAGE TOGGLE BUTTON --- */
+        .lang-toggle {
+            position: fixed;
+            top: 12px;
+            right: 12px;
+            z-index: 10001;
+            font-family: 'Space Mono', monospace;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            padding: 6px 12px;
+            background: #fff;
+            border: 1px solid #000;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .lang-toggle:hover {
+            background: #000;
+            color: #fff;
+        }
+        @media (min-width: 1024px) {
+            .lang-toggle {
+                top: 20px;
+                right: 20px;
+                font-size: 11px;
+                padding: 8px 16px;
+                border-radius: 8px;
+            }
+        }
+    </style>
+</head>
+<body class="antialiased font-body">
+    <!-- Language Toggle Button -->
+    <button id="lang-toggle" class="lang-toggle" onclick="toggleLanguage()">TR</button>
+
+    <div id="loading-overlay">
+        <div class="font-body text-[10px] uppercase tracking-[0.3em] animate-pulse text-gray-400">POP UP 001: ARTSHOW</div>
+    </div>
+
+    <!-- Header Section -->
+    <div class="header-bg w-full border-b border-gray-100 overflow-hidden">
+        <div class="max-w-[2400px] h-full mx-auto relative">
+            <div class="logo-desktop-shift logo-mobile-scale pt-6 lg:pt-0">
+                <img src="logo-anim-fuls.gif" alt="Logo Animated" onerror="this.style.display='none'">
+            </div>
+            <header class="flex flex-col lg:flex-row items-center lg:items-center justify-start lg:justify-end px-4 lg:px-16 h-auto lg:h-full relative z-20 w-full pt-6 pb-2 lg:py-0">
+                <div class="hidden lg:block lg:w-[35%] pointer-events-none"></div>
+                <div class="w-full lg:w-[60%] flex flex-col items-center lg:items-start text-center lg:text-left">
+                    <h1 id="site-title" class="font-header text-[11px] tracking-[0.5em] uppercase mb-3 lg:mb-4 text-black">POP UP 001: ARTSHOW</h1>
+                    
+                    <div class="lg:hidden mb-2">
+                        <button onclick="toggleInfo()" class="font-body text-[9px] uppercase tracking-widest border border-black/10 px-4 py-2 hover:bg-black hover:text-white transition-all">
+                            <span id="info-btn-text">Information</span> <span id="info-icon">+</span>
+                        </button>
+                    </div>
+                    
+                    <div id="header-description-container">
+                        <p id="header-description" class="font-body text-[7.5pt] text-gray-600 whitespace-pre-wrap px-4 lg:px-0 text-justify" style="text-align-last: left;"></p>
+                    </div>
+                </div>
+            </header>
+        </div>
+    </div>
+
+    <!-- Control Bar -->
+    <div class="max-w-[2400px] mx-auto px-4 lg:px-16 pt-6 lg:pt-8 pb-4">
+        <div class="flex items-center border-b border-gray-100 pb-4">
+            <div class="flex items-center gap-4 flex-1 min-w-0">
+                <div id="filter-wrapper" class="flex flex-wrap items-center gap-2 lg:gap-6">
+                    <span id="category-label" class="font-header text-[8px] lg:text-[9px] uppercase tracking-widest text-gray-300 whitespace-nowrap">Category:</span>
+                    <div id="filter-list" class="flex flex-wrap items-center gap-x-3 gap-y-2"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="max-w-[2400px] mx-auto px-4 lg:px-16 pb-20 mt-6 lg:mt-10">
+        <div id="main-container" class="transition-opacity duration-300"></div>
+    </div>
+
+    <!-- Modal Overlay -->
+    <div id="detail-modal-overlay">
+        <button id="close-modal" class="absolute top-6 left-6 lg:top-8 lg:left-8 z-[1100] p-2 hover:bg-black hover:text-white transition-all rounded-full bg-white/90 border border-gray-100 shadow-sm">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+        <div id="detail-modal" class="glass-panel">
+            <div class="carousel-container">
+                <div class="carousel-main-area">
+                    <button id="carousel-prev" class="carousel-arrow prev hidden" onclick="window.carouselPrev()">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                    </button>
+                    <div id="carousel-image-wrapper" class="carousel-image-wrapper">
+                        <img id="modal-image" src="" alt="" class="transition-opacity duration-300">
+                    </div>
+                    <button id="carousel-next" class="carousel-arrow next hidden" onclick="window.carouselNext()">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </button>
+                </div>
+                <div id="carousel-thumbnails" class="carousel-thumbnails"></div>
+                <div id="carousel-mobile-dots" class="carousel-mobile-dots"></div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        // --- LOCAL EXCEL MODE ---
+        const LOCAL_EXCEL_PATH = 'CO-POPUP-PNG.xlsx';
+
+        let artifacts = [];
+        let filteredArtifacts = [];
+        let currentCategory = 'All';
+        let isInfoOpen = false;
+        let currentLang = 'en'; // Default language is English
+        let sheetRows = null; // Store raw sheet data for language switching
+        let currentModalDropCode = null; // Track currently open modal item
+        let currentCarouselImages = []; // Array of images for current modal
+        let currentCarouselIndex = 0; // Current image index in carousel
+
+        // Column indices for data parsing (Kept intact to fetch right values from spreadsheet)
+        const TR_COLUMNS = {
+            artworkName: 38, category: 39, productType: 40, color: 41, material: 42,
+            description: 20, artistBio: 24, headerDesc: 3, price: 43
+        };
+        const EN_COLUMNS = {
+            artworkName: 3, category: 5, productType: 6, color: 7, material: 8,
+            description: 18, artistBio: 23, headerDesc: 2, price: 16
+        };
+
+        // Labels mapping only for the parts remaining (Title, Info Button, Categories)
+        const TR_LABELS = { siteTitle: 'POP UP 001: ARTSHOW', information: 'Bilgi', categoryLabel: 'Kategori:' };
+        const EN_LABELS = { siteTitle: 'POP UP 001: ARTSHOW', information: 'Information', categoryLabel: 'Category:' };
+
+        function getLabels() {
+            return currentLang === 'tr' ? TR_LABELS : EN_LABELS;
+        }
+
+        function nl2br(str) {
+            if (!str) return str;
+            return str.replace(/\\n|\n/g, '<br>');
+        }
+
+        window.toggleLanguage = function() {
+            const btn = document.getElementById('lang-toggle');
+            const container = document.getElementById('main-container');
+
+            container.classList.add('fade-out');
+
+            setTimeout(() => {
+                if (currentLang === 'en') {
+                    currentLang = 'tr';
+                    btn.innerText = 'ENG';
+                } else {
+                    currentLang = 'en';
+                    btn.innerText = 'TR';
+                }
+
+                processSheetData();
+                setupFilters();
+                renderContent();
+                container.classList.remove('fade-out');
+
+                if (currentModalDropCode && document.getElementById('detail-modal-overlay').style.display === 'block') {
+                    window.openDetail(currentModalDropCode);
+                }
+            }, 300);
+        };
+
+        window.toggleInfo = function() {
+            const container = document.getElementById('header-description-container');
+            const icon = document.getElementById('info-icon');
+            isInfoOpen = !isInfoOpen;
+            if (isInfoOpen) { container.classList.add('open'); icon.innerText = '-'; }
+            else { container.classList.remove('open'); icon.innerText = '+'; }
+        };
+
+        function processSheetData() {
+            if (!sheetRows) return;
+
+            const cols = currentLang === 'tr' ? TR_COLUMNS : EN_COLUMNS;
+            const labels = getLabels();
+
+            // Update UI labels based on language
+            document.getElementById('site-title').innerText = labels.siteTitle;
+            document.getElementById('info-btn-text').innerText = labels.information;
+            document.getElementById('category-label').innerText = labels.categoryLabel;
+
+            // Update header description based on language
+            const headerRow = currentLang === 'tr' ? 1 : 0;
+            const headerCol = 2; // C column
+            if (sheetRows[headerRow] && sheetRows[headerRow].c[headerCol] && sheetRows[headerRow].c[headerCol].v) {
+                document.getElementById('header-description').innerHTML = nl2br(String(sheetRows[headerRow].c[headerCol].v));
+            }
+
+            artifacts = sheetRows.map(row => {
+                const c = row.c;
+                const val = (idx) => (c[idx] && c[idx].v !== null && c[idx].v !== "null") ? String(c[idx].v) : "";
+                const rawScale = (c[26] && c[26].v !== null) ? parseFloat(c[26].v) : 1;
+                const thumbScale = isNaN(rawScale) ? 1 : rawScale;
+
+                const allImages = [val(11), val(34), val(35), val(36)].filter(img => img !== "");
+
+                return {
+                    dropCode: val(1),
+                    category: val(cols.category),
+                    imageLink: val(11),
+                    images: allImages,
+                    thumbnail: val(13),
+                    thumbScale: thumbScale
+                };
+            }).filter(i => i.dropCode && i.dropCode.includes("CA_"));
+
+            currentCategory = 'All';
+            filteredArtifacts = artifacts;
+        }
+
+        async function fetchSheetData() {
+            try {
+                const response = await fetch(LOCAL_EXCEL_PATH);
+                const arrayBuffer = await response.arrayBuffer();
+
+                const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+                const firstSheetName = workbook.SheetNames[0];
+                const worksheet = workbook.Sheets[firstSheetName];
+
+                const rawData = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: null });
+
+                sheetRows = rawData.map(row => {
+                    return {
+                        c: row.map(cell => {
+                            return (cell !== null && cell !== undefined) ? { v: cell } : null;
+                        })
+                    };
+                });
+
+                processSheetData();
+                setupFilters();
+                renderContent();
+                document.getElementById('loading-overlay').style.display = 'none';
+            } catch (error) { console.error(error); }
+        }
+
+        function setupFilters() {
+            const categories = ['All', ...new Set(artifacts.map(i => i.category))].filter(c => c);
+            document.getElementById('filter-list').innerHTML = categories.map(cat => `
+                <button onclick="applyFilter('${cat}')" class="filter-btn ${currentCategory === cat ? 'active' : ''}" data-cat="${cat}">${cat}</button>
+            `).join('');
+        }
+
+        window.applyFilter = function(cat) {
+            const container = document.getElementById('main-container');
+            
+            const buttons = document.querySelectorAll('.filter-btn');
+            buttons.forEach(btn => {
+                if (btn.dataset.cat === cat) btn.classList.add('active');
+                else btn.classList.remove('active');
+            });
+
+            container.classList.add('fade-out');
+            setTimeout(() => {
+                currentCategory = cat;
+                filteredArtifacts = cat === 'All' ? artifacts : artifacts.filter(i => i.category === cat);
+                renderContent(); 
+                container.classList.remove('fade-out');
+            }, 300);
+        };
+
+        function renderContent() {
+            const container = document.getElementById('main-container');
+            container.innerHTML = `<div class="dynamic-grid">${filteredArtifacts.map(renderGridItem).join('')}</div>`;
+        }
+
+        function renderGridItem(item) {
+            const scalePct = item.thumbScale * 100;
+            // Only keeping the thumbnail container without any text descriptions
+            return `
+                <div onclick="window.openDetail('${item.dropCode}')" class="cursor-pointer group flex flex-col items-center justify-center">
+                    <div class="aspect-square-container overflow-hidden hover:opacity-80 transition-opacity">
+                        <img src="${item.thumbnail}" loading="lazy" 
+                             style="width: ${scalePct}%; height: ${scalePct}%;" 
+                             class="fit-image transition-opacity duration-300">
+                    </div>
+                </div>
+            `;
+        }
+
+        window.openDetail = function(dropCode) {
+            currentModalDropCode = dropCode; 
+            const item = artifacts.find(a => a.dropCode === dropCode);
+
+            // Setup carousel
+            currentCarouselImages = item.images && item.images.length > 0 ? item.images : [item.imageLink];
+            currentCarouselIndex = 0;
+            updateCarouselDisplay();
+
+            document.getElementById('detail-modal-overlay').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        };
+
+        // Carousel functions
+        function updateCarouselDisplay() {
+            const modalImage = document.getElementById('modal-image');
+            const thumbsContainer = document.getElementById('carousel-thumbnails');
+            const mobileDotsContainer = document.getElementById('carousel-mobile-dots');
+            const prevBtn = document.getElementById('carousel-prev');
+            const nextBtn = document.getElementById('carousel-next');
+
+            const currentImage = currentCarouselImages[currentCarouselIndex];
+            const hasMultipleImages = currentCarouselImages.length > 1;
+            const isFirst = currentCarouselIndex === 0;
+            const isLast = currentCarouselIndex === currentCarouselImages.length - 1;
+
+            if (modalImage) modalImage.src = currentImage;
+
+            if (prevBtn) {
+                prevBtn.classList.toggle('hidden', !hasMultipleImages || isFirst);
+            }
+            if (nextBtn) {
+                nextBtn.classList.toggle('hidden', !hasMultipleImages || isLast);
+            }
+
+            // Desktop thumbnails
+            if (hasMultipleImages) {
+                thumbsContainer.classList.add('show');
+                thumbsContainer.innerHTML = currentCarouselImages.map((img, idx) => `
+                    <div class="carousel-thumb ${idx === currentCarouselIndex ? 'active' : ''}" onclick="window.carouselGoTo(${idx})">
+                        <img src="${img}" alt="Thumbnail ${idx + 1}">
+                    </div>
+                `).join('');
+            } else {
+                thumbsContainer.classList.remove('show');
+                thumbsContainer.innerHTML = '';
+            }
+
+            // Mobile dots
+            if (hasMultipleImages) {
+                mobileDotsContainer.classList.add('show');
+                mobileDotsContainer.innerHTML = currentCarouselImages.map((img, idx) => `
+                    <div class="carousel-dot ${idx === currentCarouselIndex ? 'active' : ''}" onclick="window.carouselGoTo(${idx})"></div>
+                `).join('');
+            } else {
+                mobileDotsContainer.classList.remove('show');
+                mobileDotsContainer.innerHTML = '';
+            }
+        }
+
+        window.carouselNext = function() {
+            if (currentCarouselIndex < currentCarouselImages.length - 1) {
+                currentCarouselIndex++;
+                updateCarouselDisplay();
+            }
+        };
+
+        window.carouselPrev = function() {
+            if (currentCarouselIndex > 0) {
+                currentCarouselIndex--;
+                updateCarouselDisplay();
+            }
+        };
+
+        window.carouselGoTo = function(index) {
+            if (index < 0 || index >= currentCarouselImages.length) return;
+            currentCarouselIndex = index;
+            updateCarouselDisplay();
+        };
+
+        // Swipe support for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            const diff = touchStartX - touchEndX;
+
+            if (Math.abs(diff) > swipeThreshold) {
+                if (diff > 0) {
+                    window.carouselNext();
+                } else {
+                    window.carouselPrev();
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const imageWrapper = document.getElementById('carousel-image-wrapper');
+            if (imageWrapper) {
+                imageWrapper.addEventListener('touchstart', (e) => {
+                    touchStartX = e.changedTouches[0].screenX;
+                }, { passive: true });
+
+                imageWrapper.addEventListener('touchend', (e) => {
+                    touchEndX = e.changedTouches[0].screenX;
+                    handleSwipe();
+                }, { passive: true });
+            }
+        });
+
+        const closeBtn = document.getElementById('close-modal');
+        closeBtn.onclick = () => {
+            document.getElementById('detail-modal-overlay').style.display = 'none';
+            document.body.style.overflow = 'auto';
+            currentModalDropCode = null;
+        };
+        
+        window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeBtn.onclick(); });
+        window.onload = fetchSheetData;
+    </script>
+</body>
+</html>
