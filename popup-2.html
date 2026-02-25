@@ -269,16 +269,7 @@
             }
         }
 
-        /* --- MOBILE LOGO & HEADER --- */
-        @media (max-width: 1023px) {
-            .logo-mobile-scale {
-                width: 15%;
-                margin: 0 auto;
-                display: block;
-            }
-        }
-
-        .logo-desktop-shift img, .logo-mobile-scale img {
+        .logo-desktop-shift img {
             width: 100%;
             height: auto;
             object-fit: contain;
@@ -334,7 +325,7 @@
             position: fixed; inset: 0;
             background-color: rgba(255, 255, 255, 0.4);
             backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            z-index: 10000; display: none; overflow: hidden; /* Header'ın üstünde olması için 10000 yapıldı */
+            z-index: 10000; display: none; overflow: hidden;
         }
 
         #detail-modal {
@@ -504,45 +495,41 @@
         .carousel-dot:hover { background-color: rgba(0, 0, 0, 0.4); }
         .carousel-dot.active { background-color: rgba(0, 0, 0, 0.7); }
 
-        /* --- LANGUAGE TOGGLE BUTTON --- */
-        .lang-toggle {
+        /* --- DESKTOP LANGUAGE TOGGLE BUTTON --- */
+        .lang-toggle-desktop {
             position: fixed;
-            top: 12px;
-            right: 80px; /* Mobil menü butonu ile çakışmaması için kaydırıldı */
-            z-index: 10001;
-            font-family: 'Space Mono', monospace;
-            font-size: 10px;
-            font-weight: 700;
-            letter-spacing: 0.1em;
-            padding: 6px 12px;
-            background: #fff;
-            border: 1px solid #000;
+            top: 20px;
+            right: 20px;
+            z-index: 9999; /* Yükleme ekranının altında, içeriklerin üstünde kalır */
+            
+            /* Menü butonlarıyla birebir aynı stiller */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 6px 10px;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(2px);
+            -webkit-backdrop-filter: blur(2px);
+            border: 1px solid #000000;
             border-radius: 6px;
             cursor: pointer;
-            transition: all 0.2s ease;
+            font-family: 'Space Mono', monospace;
+            font-size: 9px;
+            color: #000000;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.2s ease-in-out;
+            white-space: nowrap;
         }
-        .lang-toggle:hover {
-            background: #000;
-            color: #fff;
-        }
-        @media (min-width: 1024px) {
-            .lang-toggle {
-                top: 20px;
-                right: 20px; /* Desktop'ta menü ortada olduğu için sorun yok, sağa yaslandı */
-                font-size: 11px;
-                padding: 8px 16px;
-                border-radius: 8px;
-            }
-        }
-        @media (min-width: 768px) and (max-width: 1023px) {
-            .lang-toggle {
-                 top: 12px;
-                 right: 120px; /* Tablet ekranında mobil menüye tolerans */
-            }
+        
+        .lang-toggle-desktop:hover {
+            background: rgba(0, 0, 0, 0.1); 
+            border-color: #000000;
         }
     </style>
 </head>
-<body class="antialiased font-body pt-[60px] lg:pt-[80px]"> <!-- Sabit header için üstten boşluk bırakıldı -->
+<body class="antialiased font-body">
 
     <!-- ========================================================= -->
     <!-- SABİT HEADER BÖLÜMÜ -->
@@ -579,25 +566,33 @@
 
     </header>
 
-    <!-- Language Toggle Button -->
-    <button id="lang-toggle" class="lang-toggle" onclick="toggleLanguage()">TR</button>
+    <!-- Desktop Language Toggle Button (Menü Butonu Formunda) -->
+    <button id="lang-toggle-desktop" class="lang-toggle-desktop hidden lg:flex" onclick="toggleLanguage()">TR</button>
 
     <div id="loading-overlay">
         <div class="font-body text-[10px] uppercase tracking-[0.3em] animate-pulse text-gray-400">POP UP 001: ARTSHOW</div>
     </div>
 
     <!-- Header Section -->
-    <div class="header-bg w-full border-b border-gray-100 overflow-hidden mt-[-60px] lg:mt-[-80px]">
-        <div class="max-w-[2400px] h-full mx-auto relative mt-[60px] lg:mt-[80px]">
-            <div class="logo-desktop-shift logo-mobile-scale pt-6 lg:pt-0">
+    <div class="header-bg w-full border-b border-gray-100 overflow-hidden">
+        <div class="max-w-[2400px] h-full mx-auto relative">
+            
+            <!-- Desktop GIF -->
+            <div class="logo-desktop-shift hidden lg:flex pt-6 lg:pt-0">
                 <img src="logo-anim-fuls.gif" alt="Logo Animated" onerror="this.style.display='none'">
             </div>
-            <header class="flex flex-col lg:flex-row items-center lg:items-center justify-start lg:justify-end px-4 lg:px-16 h-auto lg:h-full relative z-20 w-full pt-6 pb-2 lg:py-0">
+            
+            <!-- Mobile Header Content -->
+            <header class="flex flex-col lg:flex-row items-center lg:items-center justify-center lg:justify-end px-4 lg:px-16 min-h-[220px] lg:min-h-0 h-auto lg:h-full relative z-20 w-full py-10 lg:py-0">
                 <div class="hidden lg:block lg:w-[35%] pointer-events-none"></div>
                 <div class="w-full lg:w-[60%] flex flex-col items-center lg:items-start text-center lg:text-left">
-                    <h1 id="site-title" class="font-header text-[11px] tracking-[0.5em] uppercase mb-3 lg:mb-4 text-black">POP UP 001: ARTSHOW</h1>
+                    <h1 id="site-title" class="font-header text-[11px] tracking-[0.5em] uppercase mb-4 lg:mb-4 text-black">POP UP 001: ARTSHOW</h1>
                     
-                    <div class="lg:hidden mb-2">
+                    <!-- Mobil: TR ve Information Tuşları Yan Yana -->
+                    <div class="flex items-center justify-center gap-3 lg:hidden mb-2">
+                        <button id="lang-toggle-mobile" onclick="toggleLanguage()" class="font-body text-[9px] uppercase tracking-widest border border-black/10 px-4 py-2 hover:bg-black hover:text-white transition-all">
+                            TR
+                        </button>
                         <button onclick="toggleInfo()" class="font-body text-[9px] uppercase tracking-widest border border-black/10 px-4 py-2 hover:bg-black hover:text-white transition-all">
                             <span id="info-btn-text">Information</span> <span id="info-icon">+</span>
                         </button>
@@ -608,6 +603,7 @@
                     </div>
                 </div>
             </header>
+            
         </div>
     </div>
 
@@ -726,7 +722,8 @@
         }
 
         window.toggleLanguage = function() {
-            const btn = document.getElementById('lang-toggle');
+            const btnDesktop = document.getElementById('lang-toggle-desktop');
+            const btnMobile = document.getElementById('lang-toggle-mobile');
             const container = document.getElementById('main-container');
 
             container.classList.add('fade-out');
@@ -734,10 +731,12 @@
             setTimeout(() => {
                 if (currentLang === 'en') {
                     currentLang = 'tr';
-                    btn.innerText = 'ENG';
+                    if(btnDesktop) btnDesktop.innerText = 'ENG';
+                    if(btnMobile) btnMobile.innerText = 'ENG';
                 } else {
                     currentLang = 'en';
-                    btn.innerText = 'TR';
+                    if(btnDesktop) btnDesktop.innerText = 'TR';
+                    if(btnMobile) btnMobile.innerText = 'TR';
                 }
 
                 processSheetData();
