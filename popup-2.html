@@ -582,25 +582,25 @@
             </div>
             
             <!-- MOBİL: Ortalanmış alan, yukarıdan 200px boşluk ile başlar (açıldığında zıplamaz, aşağı iter). DESKTOP: Orijinal hizasında -->
-            <header class="flex flex-col lg:flex-row items-center justify-center lg:items-center px-4 lg:px-16 relative z-20 w-full">
+            <header class="flex flex-col lg:flex-row items-center lg:items-center justify-start lg:justify-end px-4 lg:px-16 h-auto lg:h-full relative z-20 w-full pt-6 pb-2 lg:py-0">
                 <div class="hidden lg:block lg:w-[35%] pointer-events-none"></div>
-                <div class="w-full lg:w-[60%] flex flex-col items-center lg:items-start text-center h-full">
-                    
-                    <h1 id="site-title" class="font-header text-[11px] lg:text-[14px] tracking-[0.5em] uppercase mb-4 text-black text-center">POP UP 001: ARTSHOW</h1>
-                    
+                <div class="w-full lg:w-[60%] flex flex-col items-center lg:items-start text-center lg:text-left h-full">
+
+                    <h1 id="site-title" class="font-header text-[11px] tracking-[0.5em] uppercase mb-3 lg:mb-4 text-black">POP UP 001: ARTSHOW</h1>
+
                     <!-- Mobil: Ortada Information Tuşu, Sağ Kenarda TR Tuşu (Hover Kapalı) -->
                     <div class="w-full relative flex justify-center items-center lg:hidden mb-4 h-[30px]">
-                        <button onclick="toggleInfo()" class="font-body text-[9px] uppercase tracking-widest border border-black/10 px-4 py-2 text-black bg-white outline-none cursor-pointer h-full">
+                        <button onclick="toggleInfo()" class="font-body text-[9px] uppercase tracking-widest border border-black/10 px-[10px] py-[6px] rounded-[6px] text-black bg-white outline-none cursor-pointer h-full">
                             <span id="info-btn-text">Information</span> <span id="info-icon">+</span>
                         </button>
                         <!-- Sağ kenara dayalı TR butonu (Menüdeki 12px right boşluğuyla birebir aynı hizada) -->
-                        <button id="lang-toggle-mobile" onclick="toggleLanguage()" class="absolute font-body text-[9px] uppercase tracking-widest border border-black/10 px-4 py-2 text-black bg-white outline-none cursor-pointer h-full" style="right: 12px;">
+                        <button id="lang-toggle-mobile" onclick="toggleLanguage()" class="absolute font-body text-[9px] uppercase tracking-widest border border-black/10 px-[10px] py-[6px] rounded-[6px] text-black bg-white outline-none cursor-pointer h-full" style="right: 12px;">
                             TR
                         </button>
                     </div>
-                    
-                    <div id="header-description-container" class="w-[90%] max-w-4xl mx-auto">
-                        <p id="header-description" class="font-body text-[7.5pt] lg:text-[9pt] text-gray-800 whitespace-pre-wrap text-center"></p>
+
+                    <div id="header-description-container">
+                        <p id="header-description" class="font-body text-[7.5pt] text-gray-600 whitespace-pre-wrap px-4 lg:px-0 text-justify" style="text-align-last: left;"></p>
                     </div>
                 </div>
             </header>
