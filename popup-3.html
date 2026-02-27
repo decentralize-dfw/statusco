@@ -246,6 +246,16 @@
             }
         }
 
+
+/* --- MOBILE BANNER (Arka Plan) --- */
+        .header-bg {
+            position: relative;
+            background-image: url('https://raw.githubusercontent.com/decentralize-dfw/co-contemporaryartifacts-glb/main/mobile-header-popup.jpg');
+            background-size: cover;
+            background-position: center top;
+            background-repeat: no-repeat;
+        }
+
         /* --- DESKTOP BANNER & LOGO (1024px+) --- */
         @media (min-width: 1024px) {
             .header-bg {
@@ -544,7 +554,7 @@
             flex-shrink: 0 !important;
         }
 
-        /* --- ITEM NAV ARROWS (öğeler arası geçiş) --- */
+       /* --- ITEM NAV ARROWS --- */
         .item-nav-arrow {
             position: fixed;
             top: 50%;
@@ -552,9 +562,9 @@
             z-index: 1200;
             width: 22px;
             height: 44px;
-            background: rgba(0, 0, 0, 0.72);
+            background: transparent; /* Siyah arkaplan kaldırıldı */
             border: none;
-            color: #fff;
+            color: #000000; /* Oklar siyah yapıldı */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -563,11 +573,17 @@
             transition: opacity 0.2s;
             padding: 0;
         }
-        .item-nav-arrow:hover { opacity: 0.75; }
+        .item-nav-arrow:hover { opacity: 0.5; }
         .item-nav-arrow.item-prev { left: 8px; }
         .item-nav-arrow.item-next { right: 8px; }
         .item-nav-arrow.hidden { display: none !important; }
-        .item-nav-arrow svg { width: 12px; height: 12px; stroke-width: 2.5; }
+        .item-nav-arrow svg { width: 22px; height: 22px; stroke-width: 2.5; }
+        
+        /* Masaüstünde okları merkeze yaklaştırma */
+        @media (min-width: 1024px) {
+            .item-nav-arrow.item-prev { left: 40px; }
+            .item-nav-arrow.item-next { right: 40px; }
+        }
 
         /* Desktop Hover iptali */
         .lang-toggle-desktop:hover {
@@ -623,7 +639,7 @@
     <!-- Alan 2 katına çıkarıldı. Mobilde min-h-[600px] civarı devasa bir kutu oldu -->
     <div class="header-bg w-full border-b border-gray-100 overflow-hidden relative">
         <!-- Desktop'ta justify-end kullanılarak GIF ve yapı orijinaline döndürüldü -->
-        <div class="popup-outer-div max-w-[2400px] mx-auto relative flex flex-col items-center justify-start min-h-[500px] pt-[200px] pb-10 h-auto">
+        <div class="popup-outer-div max-w-[2400px] mx-auto relative flex flex-col items-center justify-start min-h-[550px] pt-[380px] pb-10 h-auto">
             
             <!-- SADECE DESKTOP'TA GÖRÜNEN GIF (Yazı ve hizalama orijinal yerinde) -->
             <div class="logo-desktop-shift hidden lg:flex pt-6 lg:pt-0">
@@ -786,30 +802,24 @@
         window.toggleLanguage = function() {
             const btnDesktop = document.getElementById('lang-toggle-desktop');
             const btnMobile = document.getElementById('lang-toggle-mobile');
-            const container = document.getElementById('main-container');
 
-            container.classList.add('fade-out');
+            if (currentLang === 'en') {
+                currentLang = 'tr';
+                if(btnDesktop) btnDesktop.innerText = 'ENG';
+                if(btnMobile) btnMobile.innerText = 'ENG';
+            } else {
+                currentLang = 'en';
+                if(btnDesktop) btnDesktop.innerText = 'TR';
+                if(btnMobile) btnMobile.innerText = 'TR';
+            }
 
-            setTimeout(() => {
-                if (currentLang === 'en') {
-                    currentLang = 'tr';
-                    if(btnDesktop) btnDesktop.innerText = 'ENG';
-                    if(btnMobile) btnMobile.innerText = 'ENG';
-                } else {
-                    currentLang = 'en';
-                    if(btnDesktop) btnDesktop.innerText = 'TR';
-                    if(btnMobile) btnMobile.innerText = 'TR';
-                }
+            processSheetData();
+            setupFilters();
+            renderContent();
 
-                processSheetData();
-                setupFilters();
-                renderContent();
-                container.classList.remove('fade-out');
-
-                if (currentModalDropCode && document.getElementById('detail-modal-overlay').style.display === 'block') {
-                    window.openDetail(currentModalDropCode);
-                }
-            }, 300);
+            if (currentModalDropCode && document.getElementById('detail-modal-overlay').style.display === 'block') {
+                window.openDetail(currentModalDropCode);
+            }
         };
 
         window.toggleInfo = function() {
@@ -915,7 +925,12 @@
 
         function renderContent() {
             const container = document.getElementById('main-container');
-            container.innerHTML = `<div class="dynamic-grid">${filteredArtifacts.map(renderGridItem).join('')}</div>`;
+            const newHTML = `<div class="dynamic-grid">${filteredArtifacts.map(renderGridItem).join('')}</div>`;
+            
+            
+            if (container.innerHTML !== newHTML) {
+                container.innerHTML = newHTML;
+            }
         }
 
         function renderGridItem(item) {
