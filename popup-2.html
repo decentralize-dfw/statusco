@@ -246,6 +246,17 @@
             }
         }
 
+
+/* --- MOBILE BANNER (Arka Plan) --- */
+        .header-bg {
+            position: relative;
+            background-color: #ffffff; /* Information açılınca alt tarafın bembeyaz ve temiz kalmasını sağlar */
+            background-image: url('https://raw.githubusercontent.com/decentralize-dfw/co-contemporaryartifacts-glb/main/mobile-header-popup.jpg');
+            background-size: 100% auto; /* Görseli yanlardan tam oturtur (fit eder), aşağısını serbest bırakır */
+            background-position: top center; /* Görseli en tepeye sabitler */
+            background-repeat: no-repeat;
+        }
+
         /* --- DESKTOP BANNER & LOGO (1024px+) --- */
         @media (min-width: 1024px) {
             .header-bg {
@@ -629,7 +640,7 @@
     <!-- Alan 2 katına çıkarıldı. Mobilde min-h-[600px] civarı devasa bir kutu oldu -->
     <div class="header-bg w-full border-b border-gray-100 overflow-hidden relative">
         <!-- Desktop'ta justify-end kullanılarak GIF ve yapı orijinaline döndürüldü -->
-        <div class="popup-outer-div max-w-[2400px] mx-auto relative flex flex-col items-center justify-start min-h-[500px] pt-[200px] pb-10 h-auto">
+        <div class="popup-outer-div max-w-[2400px] mx-auto relative flex flex-col items-center justify-start min-h-0 pt-[320px] pb-[42px] h-auto">
             
             <!-- SADECE DESKTOP'TA GÖRÜNEN GIF (Yazı ve hizalama orijinal yerinde) -->
             <div class="logo-desktop-shift hidden lg:flex pt-6 lg:pt-0">
@@ -664,7 +675,7 @@
     </div>
 
     <!-- Control Bar (Kategori Üstü Çizgi Boşluğu ve Alan İki Katına Çıkarıldı) -->
-    <div class="max-w-[2400px] mx-auto px-4 lg:px-16 pt-8 pb-4">
+    <div class="max-w-[2400px] mx-auto px-4 lg:px-16 pt-4 pb-4">
         <div class="flex items-center border-b border-gray-100 pb-4">
             <div class="flex items-center gap-4 flex-1 min-w-0">
                 <div id="filter-wrapper" class="flex flex-wrap items-center gap-2 lg:gap-6">
