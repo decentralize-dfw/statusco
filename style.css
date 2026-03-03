@@ -104,23 +104,23 @@
 --cam2-show-public: yes;
 
 /* CAMERA 2 POSITION */
---cam2-pos-x: 5000;
---cam2-pos-y: 7400;
+--cam2-pos-x: 5046;
+--cam2-pos-y: 7500;
 --cam2-pos-z: 5000;
 --cam2-lock-mode: full;
 
 /* CAMERA 3 POSITION */
---cam3-pos-x: 2500;
---cam3-pos-y: 1500;
+--cam3-pos-x: 2000;
+--cam3-pos-y: 2100;
 --cam3-pos-z: 0;
 --cam3-lock-mode: horizontal;
---cam3-show-public: yes;
+--cam3-show-public: no;
 --mobile-labels-show-public: no;
 
 /* MOBILE CAMERA */
---cam-mobile-pos-x: 5800;
---cam-mobile-pos-y: 10000;
---cam-mobile-pos-z: -2300;
+--cam-mobile-pos-x: 20000;
+--cam-mobile-pos-y: 5000;
+--cam-mobile-pos-z: -10000;
 --cam-mobile-lock-mode: none;
 --cam-mobile-fov: 60;
 
@@ -154,7 +154,7 @@
 
 /* CAMERA LIMITS */
 --camera-min-polar-angle: 0;
---camera-max-polar-angle: 90;
+--camera-max-polar-angle: 60;
 
 /* CAMERA GENERAL */
 --camera-perspective-fov: 52;
@@ -237,12 +237,13 @@
 
 /* WIREFRAME TOGGLE */
 --wire-toggle-size: 12px;
---mobile-toggle-scale: 1.6;
+--mobile-toggle-scale: 1;
 
 /* COLORS */
 --ui-color: #000000;
 --bg-color: #ffffff;
 --accent-color: #FF006A;
+
 
 
 
