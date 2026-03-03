@@ -347,9 +347,153 @@
             }
         }
 
+        /* ===== HEADER (about.html yapısı ve renkleri, scroll ile gelen) ===== */
+        #main-header {
+            position: fixed;
+            top: 20px;
+            left: 0;
+            width: 100%;
+            padding: 0 20px;
+            z-index: 1002;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transform: translateY(-400px);
+            opacity: 0;
+            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.4s ease;
+            pointer-events: none;
+        }
+
+        .header-left, #desktop-nav, #mobile-nav-container {
+            pointer-events: auto;
+        }
+
+        .header-left {
+            position: absolute;
+            left: 20px;
+            top: 0;
+        }
+
+        .side-logo {
+            width: 40px;
+            height: auto;
+            transition: transform 0.3s ease;
+        }
+
+        .side-logo:hover { transform: scale(1.05); }
+
+        #desktop-nav {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            flex-wrap: nowrap;
+            gap: 6px;
+        }
+
+        .menu-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 6px 10px;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(2px);
+            -webkit-backdrop-filter: blur(2px);
+            border: 1px solid #29174d;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            font-family: 'Space Mono', monospace;
+            font-size: 9px;
+            color: #29174d;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.2s ease-in-out;
+            white-space: nowrap;
+            flex-shrink: 1;
+        }
+
+        @media (hover: hover) {
+            .menu-btn:hover {
+                background: rgba(182, 165, 208, 0.4);
+                border-color: #29174d;
+            }
+        }
+
+        .menu-btn.active {
+            background: #29174d;
+            border-color: #29174d;
+            color: #ffffff;
+            font-weight: 700;
+        }
+
+        #mobile-nav-container {
+            display: none;
+            position: absolute;
+            right: 20px;
+            top: 0;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 6px;
+        }
+
+        #mobile-menu-items {
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            margin-top: 6px;
+        }
+
+        #mobile-menu-items.open { display: flex; }
+
+        #mobile-menu-items .menu-btn {
+            width: 80px;
+            justify-content: center;
+        }
+
+        @media (max-width: 768px) {
+            #main-header { top: 12px; padding: 0 12px; }
+            .header-left { left: 12px; }
+            #desktop-nav { display: none; }
+            #mobile-nav-container { display: flex; right: 12px; }
+            .side-logo { width: 32px; }
+            .menu-btn {
+                padding: clamp(4px, 1.5vw, 8px) clamp(5px, 2vw, 10px);
+                font-size: clamp(5px, 1.8vw, 7px);
+                flex-shrink: 1;
+                min-width: 0;
+            }
+        }
+
     </style>
 </head>
 <body class="w-full">
+
+    <!-- HEADER MENÜ -->
+    <header id="main-header">
+        <div class="header-left">
+            <a href="https://status-co.com/">
+                <img src="https://status-co.com/weblogo.png" alt="Status Co. Logo" class="side-logo">
+            </a>
+        </div>
+        <nav id="desktop-nav">
+            <a href="https://status-co.com/" class="menu-btn">HOME</a>
+            <a href="https://status-co.com/gallery" class="menu-btn">DROPS</a>
+            <a href="https://status-co.com/whatsyourstatus" class="menu-btn active">COLLABORATIONS</a>
+            <a href="https://status-co.com/popup" class="menu-btn">POP-UPS</a>
+            <a href="https://status-co.com/about" class="menu-btn">ABOUT</a>
+        </nav>
+        <div id="mobile-nav-container">
+            <button id="menu-toggle" class="menu-btn" style="font-weight: 700; width: 80px;">MENU</button>
+            <div id="mobile-menu-items">
+                <a href="https://status-co.com/" class="menu-btn">HOME</a>
+                <a href="https://status-co.com/gallery" class="menu-btn">DROPS</a>
+                <a href="https://status-co.com/whatsyourstatus" class="menu-btn active">COLLABORATIONS</a>
+                <a href="https://status-co.com/popup" class="menu-btn">POP-UPS</a>
+                <a href="https://status-co.com/about" class="menu-btn">ABOUT</a>
+            </div>
+        </div>
+    </header>
 
     <!-- 1. FULLSCREEN VIDEO (DOUBLE BUFFER) -->
     <div id="bg-video-container">
@@ -619,28 +763,58 @@
         document.querySelectorAll('.reveal-element').forEach(el => observer.observe(el));
 
         const blurLayer = document.getElementById('blur-layer');
+        const mainHeader = document.getElementById('main-header');
         let hasScrolled = false;
+
+        // Mobil menü toggle
+        const menuToggle = document.getElementById('menu-toggle');
+        const menuItems = document.getElementById('mobile-menu-items');
+
+        function closeMenu() {
+            if (menuItems && menuItems.classList.contains('open')) {
+                menuItems.classList.remove('open');
+                menuToggle.textContent = 'MENU';
+            }
+        }
+
+        if (menuToggle) {
+            menuToggle.addEventListener('click', () => {
+                const isOpen = menuItems.classList.toggle('open');
+                menuToggle.textContent = isOpen ? 'CLOSE' : 'MENU';
+            });
+        }
 
         window.addEventListener('scroll', () => {
             const scrollY = window.scrollY;
             const windowHeight = window.innerHeight;
             const maxScrollHeight = document.documentElement.scrollHeight - windowHeight;
             let scrollPercent = maxScrollHeight > 0 ? scrollY / maxScrollHeight : 0;
-            
+
             if (scrollPercent > 1) scrollPercent = 1;
             if (scrollPercent < 0) scrollPercent = 0;
 
-            if (!hasScrolled && scrollY > 50) { 
-                scrollIndicator.style.opacity = '0'; 
-                hasScrolled = true; 
+            if (!hasScrolled && scrollY > 50) {
+                scrollIndicator.style.opacity = '0';
+                hasScrolled = true;
             } else if (scrollY < 50 && hasScrolled) {
                 scrollIndicator.style.opacity = '1';
                 hasScrolled = false;
             }
 
-            let blurOpacity = scrollPercent * 1.2; 
+            let blurOpacity = scrollPercent * 1.2;
             if (blurOpacity > 1) blurOpacity = 1;
             blurLayer.style.opacity = blurOpacity.toFixed(3);
+
+            // Header slide-in (index.html ile aynı mantık)
+            if (scrollY <= 10) {
+                mainHeader.style.transform = 'translateY(-400px)';
+                mainHeader.style.opacity = '0';
+                closeMenu();
+            } else {
+                let revealY = Math.min(0, -300 + (scrollY * 0.8));
+                mainHeader.style.transform = `translateY(${revealY}px)`;
+                mainHeader.style.opacity = '1';
+            }
         });
     </script>
 </body>
