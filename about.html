@@ -1,0 +1,582 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>status co | About</title>
+    
+    <link rel="icon" type="image/png" href="weblogo.png">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/granim/2.0.0/granim.min.js"></script>
+    <script type="module" src="https://unpkg.com/@splinetool/viewer@1.12.39/build/spline-viewer.js"></script>
+
+    <style>
+        :root {
+            --purple-deep: #29174d;
+            --purple-mid: #625eaa;
+            --purple-light: #b6a5d0;
+        }
+
+        body {
+            font-family: 'Space Mono', monospace;
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+            color: var(--purple-deep);
+            overflow-x: hidden;
+        }
+
+        html, body {
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        ::-webkit-scrollbar { display: none; }
+
+        /* ========== BACKGROUND LAYERS ========== */
+        .bg-layer-full {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100vh; height: 100lvh;
+            pointer-events: none;
+        }
+
+        #granim-canvas { z-index: -3; opacity: 0; }
+
+        #bg-overlay {
+            z-index: -2;
+            background: transparent;
+        }
+
+        /* ========== SPLINE LAYER ========== */
+        #canvas-layer {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100vh; height: 100svh;
+            z-index: -1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        spline-viewer {
+            width: 100%; height: 100%;
+            display: block;
+            transition: transform 0.3s ease;
+            --background-color: transparent;
+            background: transparent;
+        }
+        spline-viewer::part(logo) { display: none; }
+
+        @media (max-width: 768px) {
+            spline-viewer {
+                transform: scale(0.75);
+                transform-origin: center center;
+            }
+        }
+
+        /* ========== BLUR LAYER ========== */
+        #blur-layer {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100vh; height: 100lvh;
+            z-index: 5;
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            opacity: 0;
+            pointer-events: none;
+            will-change: opacity;
+            transform: translate3d(0,0,0);
+        }
+
+        /* ========== HEADER ========== */
+        #main-header {
+            position: fixed;
+            top: 20px; left: 0;
+            width: 100%;
+            padding: 0 20px;
+            z-index: 1002;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transform: translateY(0px);
+            opacity: 1;
+            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.4s ease;
+            pointer-events: none;
+        }
+
+        .header-left, #desktop-nav, #mobile-nav-container {
+            pointer-events: auto;
+        }
+
+        .header-left {
+            position: absolute;
+            left: 20px; top: 0;
+        }
+
+        .side-logo {
+            width: 40px; height: auto;
+            transition: transform 0.3s ease;
+        }
+        .side-logo:hover { transform: scale(1.05); }
+
+        #desktop-nav {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            flex-wrap: nowrap;
+            gap: 6px;
+        }
+
+        .info-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 6px 10px;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(2px);
+            -webkit-backdrop-filter: blur(2px);
+            border: 1px solid var(--purple-deep);
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            font-family: 'Space Mono', monospace;
+            font-size: 9px;
+            color: var(--purple-deep);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.2s ease-in-out;
+            white-space: nowrap;
+            flex-shrink: 1;
+        }
+
+        @media (hover: hover) {
+            .info-btn:hover {
+                background: rgba(182, 165, 208, 0.4);
+                border-color: var(--purple-deep);
+            }
+        }
+
+        .info-btn.active {
+            background: var(--purple-deep);
+            border-color: var(--purple-deep);
+            color: #ffffff;
+            font-weight: 700;
+        }
+
+        #mobile-nav-container {
+            display: none;
+            position: absolute;
+            right: 20px; top: 0;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 6px;
+        }
+
+        #mobile-menu-items {
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            margin-top: 6px;
+        }
+
+        #mobile-menu-items.open { display: flex; }
+
+        #mobile-menu-items .info-btn {
+            width: 80px;
+            justify-content: center;
+        }
+
+        @media (max-width: 768px) {
+            #main-header { top: 12px; padding: 0 12px; }
+            .header-left { left: 12px; }
+            #desktop-nav { display: none; }
+            #mobile-nav-container { display: flex; right: 12px; }
+            .side-logo { width: 32px; }
+            .info-btn {
+                padding: clamp(4px, 1.5vw, 8px) clamp(5px, 2vw, 10px);
+                font-size: clamp(5px, 1.8vw, 7px);
+                flex-shrink: 1;
+                min-width: 0;
+            }
+        }
+
+        /* ========== SCROLL INDICATOR ========== */
+        /* ========== MAIN CONTENT ========== */
+        #main-content {
+            opacity: 1;
+        }
+
+        /* ========== TEXT SECTION — fits exactly one viewport ========== */
+        #textContent {
+            width: 100%;
+            min-height: 100svh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+            padding: clamp(60px, 12vh, 80px) clamp(16px, 5vw, 24px) clamp(60px, 10vh, 80px);
+        }
+
+        .text-wrapper {
+            max-width: 720px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        /* AUTO-FIT: scale text so everything fits one screen */
+        .text-fit-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .para-large {
+            font-family: 'Space Mono', monospace;
+            font-weight: 400;
+            color: var(--purple-mid);
+            line-height: 1.45;
+            margin: 0 0 0.7em 0;
+            text-align: justify;
+            -moz-text-align-last: left;
+            text-align-last: left;
+        }
+
+        .para-small {
+            font-family: 'Space Mono', monospace;
+            font-weight: 400;
+            color: var(--purple-deep);
+            line-height: 1.65;
+            margin: 0;
+            text-align: justify;
+            -moz-text-align-last: left;
+            text-align-last: left;
+        }
+
+        /* ========== FOOTER ========== */
+        #footer {
+            position: fixed;
+            bottom: 4px; left: 0; right: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 60;
+            padding: 0 20px;
+            font-family: 'Space Mono', monospace;
+            pointer-events: none;
+        }
+
+        .footer-social, .footer-right { pointer-events: auto; }
+
+        .footer-social {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .footer-social a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .footer-social a:hover { opacity: 0.5; }
+
+        .footer-social svg {
+            width: 16px; height: 16px;
+            fill: var(--purple-mid);
+        }
+
+        .footer-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 8px;
+            color: var(--purple-mid);
+            opacity: 0.8;
+        }
+
+        .footer-terms {
+            color: var(--purple-mid);
+            text-decoration: underline;
+        }
+
+        .footer-terms:hover { opacity: 1; font-weight: bold; }
+
+        @media (max-width: 768px) {
+            #footer { bottom: 4px; padding: 0 12px; }
+            .footer-social svg { width: 14px; height: 14px; }
+            .footer-right { font-size: 6px; gap: 8px; }
+        }
+    </style>
+</head>
+<body class="w-full">
+
+    <!-- HEADER -->
+    <header id="main-header">
+        <div class="header-left">
+            <a href="https://status-co.com/">
+                <img src="https://status-co.com/weblogo.png" alt="Status Co. Logo" class="side-logo">
+            </a>
+        </div>
+
+        <nav id="desktop-nav">
+            <a href="https://status-co.com/" class="info-btn">HOME</a>
+            <a href="https://status-co.com/gallery" class="info-btn">DROPS</a>
+            <a href="https://status-co.com/whatsyourstatus" class="info-btn">COLLABORATIONS</a>
+            <a href="https://status-co.com/popup" class="info-btn">POP-UPS</a>
+            <a href="https://status-co.com/about" class="info-btn active">ABOUT</a>
+        </nav>
+
+        <div id="mobile-nav-container">
+            <button id="menu-toggle" class="info-btn" style="font-weight: 700; width: 80px;">MENU</button>
+            <div id="mobile-menu-items">
+                <a href="https://status-co.com/" class="info-btn">HOME</a>
+                <a href="https://status-co.com/gallery" class="info-btn">DROPS</a>
+                <a href="https://status-co.com/whatsyourstatus" class="info-btn">COLLABORATIONS</a>
+                <a href="https://status-co.com/popup" class="info-btn">POP-UPS</a>
+                <a href="https://status-co.com/about" class="info-btn active">ABOUT</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- BACKGROUND LAYERS -->
+    <canvas id="granim-canvas" class="bg-layer-full"></canvas>
+    <div id="bg-overlay" class="bg-layer-full"></div>
+
+    <!-- SPLINE LAYER -->
+    <div id="canvas-layer">
+        <spline-viewer url="https://prod.spline.design/CPyMQUzQK3i5LmAs/scene.splinecode"></spline-viewer>
+    </div>
+
+    <!-- BLUR LAYER -->
+    <div id="blur-layer"></div>
+
+    <!-- MAIN CONTENT: hidden on load, revealed on scroll -->
+    <div class="relative z-10 w-full" id="main-content">
+
+
+<!-- Text Section: second viewport = about text -->
+        <section id="textContent">
+            <div class="text-wrapper">
+                <div class="text-fit-container" id="fitContainer">
+                    <p class="para-large" id="paraBig">
+                        Founded in 2026, status co is a cultural studio working across collectibles and collaborations. Positioned between art, design, and everyday life, the studio produces, curates, and presents contemporary collectibles by artists and designers through curated pop-up drops. These objects are created with intention—meant to be lived with rather than stored, transforming functional forms into meaningful artifacts. Collaboration is also at the core of the studio's practice; status co closely connects creatives with brands, institutions, and corporations to develop projects that translate creative authorship into new contexts.
+                    </p>
+                    <!-- Accordion -->
+                    <div id="accordion-wrap" style="width:100%; margin-top: 0.4em;">
+                        <button id="accordion-btn" onclick="toggleAccordion()" style="
+                            display: flex;
+                            align-items: center;
+                            justify-content: space-between;
+                            width: 100%;
+                            background: transparent;
+                            border: 1px solid var(--purple-mid);
+                            border-radius: 6px;
+                            padding: 10px 14px;
+                            font-family: 'Space Mono', monospace;
+                            font-size: 9px;
+                            color: var(--purple-deep);
+                            text-transform: uppercase;
+                            letter-spacing: 0.12em;
+                            cursor: pointer;
+                            transition: background 0.2s;
+                        ">
+                            <span>Drop 001 — Contemporary Artifacts</span>
+                            <span id="accordion-icon" style="font-size: 12px; line-height:1; transition: transform 0.3s ease;">+</span>
+                        </button>
+                        <div id="accordion-body" style="
+                            overflow: hidden;
+                            max-height: 0;
+                            transition: max-height 0.5s cubic-bezier(0.4,0,0.2,1), opacity 0.4s ease, padding 0.4s ease;
+                            opacity: 0;
+                            padding: 0 14px;
+                        ">
+                            <p class="para-small" id="paraSmall" style="padding: 14px 0 6px 0; margin:0;">
+                                status co launched its first-ever drop, CONTEMPORARY ARTIFACTS, and its first collaboration, "what's your status?", at Art Show between February 13–15, 2026. Bringing together works by eleven artists and designers, the inaugural drop was built on the proposition that the functional objects shaping our daily lives deserve the same attention and authorship as traditional art. As part of this exhibition, the studio introduced a conceptual, participatory collectible: a container filled with sculpted paper forms functioning as contemporary fortunes. These artifacts were not purchased but encountered, offering an alternative form of collecting. For this first collaboration, a donation was made to the TEMA Foundation on behalf of Art Show x status co to give the objects an ecological presence alongside their conceptual meaning.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- FOOTER -->
+    <div id="footer">
+        <div class="footer-social">
+            <a href="/cdn-cgi/l/email-protection#8ce5e2eae3ccfff8edf8f9ffa1efe3a2efe3e1" title="Email">
+                <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+            </a>
+            <a href="https://instagram.com/status.co" target="_blank" title="Instagram">
+                <svg viewBox="0 0 24 24"><path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8C4 18.39 5.61 20 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6C20 5.61 18.39 4 16.4 4H7.6m9.65 1.5a1.25 1.25 0 0 1 1.25 1.25A1.25 1.25 0 0 1 17.25 8 1.25 1.25 0 0 1 16 6.75a1.25 1.25 0 0 1 1.25-1.25M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/></svg>
+            </a>
+        </div>
+        <div class="footer-right">
+            <span>ALL RIGHTS RESERVED © STATUS CO 2026</span>
+            <a href="https://status-co.com/terms-conditions" class="footer-terms">TERMS AND CONDITIONS</a>
+        </div>
+    </div>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+        // =========================================================
+        // 1. GRANIM (subtle, white-toned)
+        // =========================================================
+        var granimInstance = new Granim({
+            element: '#granim-canvas',
+            direction: 'diagonal',
+            isPausedWhenNotInView: true,
+            stateTransitionSpeed: 1000,
+            states: {
+                "default-state": {
+                    gradients: [
+                        ['#f8f6ff', '#ede8f8'],
+                        ['#ede8f8', '#f0ecfc'],
+                        ['#f0ecfc', '#f8f6ff'],
+                    ],
+                    transitionSpeed: 4000,
+                    loop: true
+                }
+            }
+        });
+
+        // =========================================================
+        // 2. AUTO-FIT TEXT TO ONE VIEWPORT
+        // =========================================================
+        function fitTextToViewport() {
+            const section = document.getElementById('textContent');
+            const container = document.getElementById('fitContainer');
+            const bigP = document.getElementById('paraBig');
+            const smallP = document.getElementById('paraSmall');
+
+            if (!section || !container || !bigP || !smallP) return;
+
+            const availableH = window.innerHeight;
+            const availableW = Math.min(720, window.innerWidth - 48);
+
+            // Reset to natural sizes first
+            bigP.style.fontSize = '';
+            smallP.style.fontSize = '';
+
+            // Available height = viewport - padding (top 90px + bottom 80px)
+            const paddingV = 170;
+            const targetH = availableH - paddingV;
+
+            // Binary search for the right font sizes
+            // Small para is 70% of big (30% smaller as requested)
+            const isMobile = window.innerWidth < 768;
+            let lo = 4, hi = isMobile ? 13 : 17;
+            for (let i = 0; i < 20; i++) {
+                const mid = (lo + hi) / 2;
+                const bigSize = mid;
+                const smallSize = mid * 0.70;
+
+                bigP.style.fontSize = bigSize + 'px';
+                smallP.style.fontSize = smallSize + 'px';
+
+                const totalH = container.offsetHeight;
+                if (totalH <= targetH) {
+                    lo = mid;
+                } else {
+                    hi = mid;
+                }
+            }
+
+            // Apply final sizes
+            const finalBig = lo;
+            const finalSmall = lo * 0.70;
+            bigP.style.fontSize = finalBig + 'px';
+            smallP.style.fontSize = finalSmall + 'px';
+        }
+
+        // Run on load and resize
+        window.addEventListener('load', fitTextToViewport);
+        window.addEventListener('resize', fitTextToViewport);
+        // Also run after fonts loaded
+        document.fonts.ready.then(fitTextToViewport);
+
+        // =========================================================
+        // 2b. ACCORDION
+        // =========================================================
+        function toggleAccordion() {
+            const body = document.getElementById('accordion-body');
+            const icon = document.getElementById('accordion-icon');
+            const btn = document.getElementById('accordion-btn');
+            const isOpen = body.style.maxHeight !== '0px' && body.style.maxHeight !== '';
+
+            if (isOpen) {
+                body.style.maxHeight = '0';
+                body.style.opacity = '0';
+                body.style.padding = '0 14px';
+                icon.style.transform = 'rotate(0deg)';
+                icon.textContent = '+';
+                btn.style.background = 'transparent';
+            } else {
+                body.style.maxHeight = body.scrollHeight + 200 + 'px';
+                body.style.opacity = '1';
+                body.style.padding = '0 14px';
+                icon.style.transform = 'rotate(45deg)';
+                icon.textContent = '+';
+                btn.style.background = 'rgba(182,165,208,0.15)';
+            }
+        }
+
+
+        // =========================================================
+        // 3. MOBILE MENU
+        // =========================================================
+        const menuToggle = document.getElementById('menu-toggle');
+        const menuItems = document.getElementById('mobile-menu-items');
+
+        function closeMenu() {
+            if (menuItems.classList.contains('open')) {
+                menuItems.classList.remove('open');
+                menuToggle.textContent = 'MENU';
+            }
+        }
+
+        menuToggle.addEventListener('click', () => {
+            const isOpen = menuItems.classList.toggle('open');
+            menuToggle.textContent = isOpen ? 'CLOSE' : 'MENU';
+        });
+
+        // =========================================================
+        // 4. SCROLL EFFECTS
+        // =========================================================
+        const blurLayer = document.getElementById('blur-layer');
+        const header = document.getElementById('main-header');
+        // Set initial states on load
+        window.addEventListener('DOMContentLoaded', () => {
+            blurLayer.style.opacity = '1';
+            header.style.transform = 'translateY(0px)';
+            header.style.opacity = '1';
+        });
+
+        window.addEventListener('scroll', () => {
+            const scrollY = window.scrollY;
+            const viewportHeight = window.innerHeight;
+
+            // Blur always full
+            blurLayer.style.opacity = '1';
+
+            // Header always visible
+            header.style.transform = 'translateY(0px)';
+            header.style.opacity = '1';
+        });
+    </script>
+</body>
+</html>

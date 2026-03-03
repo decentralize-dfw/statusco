@@ -1,0 +1,312 @@
+
+<!--
+    Developed by Virtually Ever After (VEA) — https://virtuallyeverafter.xyz/
+    A Luxembourg-based creative studio crafting immersive 3D environments and spatial experiences.
+    All products are modeled in 3D with vendor authorization. This interface is designed for Status Co.
+    VEA transforms static spaces into interactive, story-driven digital worlds using Three.js, WebXR, and AI.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>status co | contemporary artifacts</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="weblogo.png">
+    <script src="https://unpkg.com/meshoptimizer@0.19.0/meshopt_decoder.js"></script>
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Capriola&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="loader">
+        <div class="loader-main">
+            <img class="loader-logo" src="logo-anim-fuls.gif" alt="Loading">
+            <div class="loader-title">CONTEMPORARY ARTIFACTS</div>
+            <div class="loader-bar-container"><div class="loader-bar"></div></div>
+        </div>
+        <div class="loader-status">
+            <div class="loader-text">Loading Data</div>
+        </div>
+    </div>
+    <!-- NAVIGATION -->
+    <header id="main-header">
+        <nav id="desktop-nav">
+            <a href="https://status-co.com/" class="info-btn">HOME</a>
+            <a href="https://status-co.com/gallery" class="info-btn active">DROPS</a>
+            <a href="https://status-co.com/whatsyourstatus" class="info-btn">COLLABORATIONS</a>
+            <a href="https://status-co.com/popup" class="info-btn">POP-UPS</a>
+            <a href="https://status-co.com/about" class="info-btn">ABOUT</a>
+        </nav>
+        <div id="mobile-nav-container">
+            <button id="menu-toggle" class="info-btn" style="font-weight: 700; width: 80px;">MENU</button>
+            <div id="mobile-menu-items">
+                <a href="https://status-co.com/" class="info-btn">HOME</a>
+                <a href="https://status-co.com/gallery" class="info-btn active">DROPS</a>
+                <a href="https://status-co.com/whatsyourstatus" class="info-btn">COLLABORATIONS</a>
+                <a href="https://status-co.com/popup" class="info-btn">POP-UPS</a>
+                <a href="https://status-co.com/about" class="info-btn">ABOUT</a>
+            </div>
+        </div>
+    </header>
+    <!-- INFO BUTTONS (LEFT SIDE) -->
+    <div id="info-buttons">
+        <button class="info-btn" id="btn-status" onclick="toggleInfoPanel('status')">
+            <img src="weblogo.png" alt="">
+            <span>STATUS CO</span>
+        </button>
+        <button class="info-btn" id="btn-about" onclick="toggleInfoPanel('about')">
+            <img class="btn-about-logo" src="weblogo.png" alt="">
+            <span>CONTEMPORARY ARTIFACTS</span>
+        </button>
+    </div>
+    <!-- INFO PANEL (LEFT SIDE) -->
+    <div id="info-panel">
+        <div class="info-panel-header">
+            <span class="info-panel-title" id="info-panel-title"></span>
+            <button class="info-panel-close" onclick="closeInfoPanel()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M18 6L6 18M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+        <div class="info-panel-content" id="info-panel-content"></div>
+    </div>
+    <!-- MARQUEE BAR -->
+    <div id="marquee-bar">
+        <div class="marquee-track" id="marquee-track"></div>
+    </div>
+    <div id="right-toggles">
+        <div id="right-toggle-row0">
+            <div id="grid-3d-toggle" onclick="toggleGridMode()">
+                <div class="grid-3d-icons">
+                    <div class="grid-3d-icon" id="icon-3d">
+                        <svg viewBox="0 0 24 24" style="fill:none; stroke:#888; stroke-width:1.8; stroke-linejoin:round;">
+                            <path d="M12 2L22 7L12 12L2 7Z"/>
+                            <path d="M2 7L12 12L12 22L2 17Z"/>
+                            <path d="M22 7L12 12L12 22L22 17Z"/>
+                        </svg>
+                    </div>
+                    <div class="grid-3d-icon" id="icon-grid">
+                        <svg viewBox="0 0 24 24" style="fill:#888; stroke:none;">
+                            <rect x="3" y="3" width="4.5" height="4.5" rx="0.5"/>
+                            <rect x="9.75" y="3" width="4.5" height="4.5" rx="0.5"/>
+                            <rect x="16.5" y="3" width="4.5" height="4.5" rx="0.5"/>
+                            <rect x="3" y="9.75" width="4.5" height="4.5" rx="0.5"/>
+                            <rect x="9.75" y="9.75" width="4.5" height="4.5" rx="0.5"/>
+                            <rect x="16.5" y="9.75" width="4.5" height="4.5" rx="0.5"/>
+                            <rect x="3" y="16.5" width="4.5" height="4.5" rx="0.5"/>
+                            <rect x="9.75" y="16.5" width="4.5" height="4.5" rx="0.5"/>
+                            <rect x="16.5" y="16.5" width="4.5" height="4.5" rx="0.5"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="grid-3d-track">
+                    <div class="grid-3d-thumb"></div>
+                </div>
+            </div>
+        </div>
+        <div id="right-toggle-row1">
+            <div id="wire-toggle" onclick="toggleWireMode()">
+                <div class="wire-toggle-track">
+                    <div class="wire-toggle-thumb"></div>
+                </div>
+            </div>
+        </div>
+        <div id="right-toggle-row2">
+            <button class="lock-btn" id="btn-lock-icon-public" onclick="toggleCameraLock()" title="Lock/Unlock Camera">
+                <svg viewBox="0 0 24 24"><path d="M12 17c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6-9h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6h1.9c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm0 12H6V10h12v10z"/></svg>
+            </button>
+            <div id="cam-toggle">
+                <div class="cam-toggle-dots">
+                    <div class="cam-dot active" id="cam-dot-1" onclick="switchCamera(1)"></div>
+                    <div class="cam-dot" id="cam-dot-2" onclick="switchCamera(2)"></div>
+                    <div class="cam-dot" id="cam-dot-3" onclick="switchCamera('persp')" style="display:none"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- GRID MODE -->
+    <div id="grid-fade"></div>
+    <div id="grid-overlay">
+        <div class="grid-container" id="grid-container"></div>
+    </div>
+    <!-- GRID MODAL (Contemporary Artifacts Style) -->
+    <div id="grid-modal-overlay">
+        <button id="grid-modal-close" onclick="window.closeGridModal()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+        <div id="grid-modal">
+            <div class="gm-image-panel">
+                <div class="gm-carousel-container">
+                    <div class="gm-carousel-main">
+                        <button id="gm-prev" class="gm-arrow prev hidden" onclick="window.gmCarouselPrev()">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                        </button>
+                        <div id="gm-img-wrap" class="gm-carousel-img-wrap">
+                            <img id="gm-main-img" src="" alt="">
+                        </div>
+                        <button id="gm-next" class="gm-arrow next hidden" onclick="window.gmCarouselNext()">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                        </button>
+                    </div>
+                    <div id="gm-thumbnails" class="gm-thumbnails"></div>
+                    <div id="gm-dots" class="gm-dots"></div>
+                </div>
+            </div>
+            <div class="gm-info-panel">
+                <div id="gm-details" class="gm-details"></div>
+            </div>
+        </div>
+    </div>
+    <!-- UI CONTAINER (NEW STRUCTURE) -->
+    <div id="ui-container">
+        <button class="lock-btn" id="btn-lock-icon" onclick="toggleCameraLock()" title="Lock/Unlock Camera">
+            <svg viewBox="0 0 24 24" id="lock-icon-svg">
+                <path d="M12 17c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6-9h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6h1.9c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm0 12H6V10h12v10z"/>
+            </svg>
+        </button>
+        <div class="ui-right-column">
+            <div class="toggle-group ui-view-group">
+                <button class="toggle-btn active" id="btn-cam1" onclick="switchCamera(1)">VIEW 1</button>
+                <button class="toggle-btn" id="btn-cam2" onclick="switchCamera(2)">VIEW 2</button>
+                <button class="toggle-btn" id="btn-cam3" onclick="switchCamera('persp')" style="display:none">VIEW 3</button>
+                <button class="toggle-btn" id="btn-cam-mobile" onclick="switchCamera('mobile')" style="display:none">MOBILE</button>
+            </div>
+            <div class="toggle-group ui-graphics-group">
+                <button class="toggle-btn active" id="btn-mid" onclick="handlePresetSelection('default')">DEFAULT</button>
+                <button class="toggle-btn" id="btn-low" onclick="handlePresetSelection('low')">WIRE</button>
+            </div>
+            <!-- Editor Transform Tools (Hidden initially) -->
+            <div class="transform-group" id="transform-group" style="display: none; margin-top: 4px;">
+                <button class="transform-btn active" id="btn-translate" onclick="setTransformMode('translate')">T</button>
+                <button class="transform-btn" id="btn-rotate" onclick="setTransformMode('rotate')">R</button>
+                <button class="transform-btn" id="btn-scale" onclick="setTransformMode('scale')">S</button>
+            </div>
+        </div>
+    </div>
+    <!-- EDITOR PANEL (LEFT SIDE) - EXCEL STYLE -->
+    <div id="editor-panel">
+        <div class="editor-drag-handle" id="editor-drag-handle">EDITOR</div>
+        <!-- TABS -->
+        <div class="editor-tabs">
+            <button class="editor-tab active" data-tab="products" onclick="switchEditorTab('products')">Products</button>
+            <button class="editor-tab" data-tab="parameters" onclick="switchEditorTab('parameters')">Render</button>
+            <button class="editor-tab" data-tab="scene" onclick="switchEditorTab('scene')">Scene</button>
+        </div>
+        <!-- PRODUCTS TAB -->
+        <div class="editor-tab-content active" id="tab-products">
+            <table class="editor-table">
+                <thead>
+                    <tr>
+                        <th style="width:20px;"></th>
+                        <th class="name-col">NAME</th>
+                        <th class="col-x">X</th>
+                        <th class="col-y">Y</th>
+                        <th class="col-z">Z</th>
+                        <th class="col-x">RX</th>
+                        <th class="col-y">RY</th>
+                        <th class="col-z">RZ</th>
+                        <th class="col-s">S</th>
+                    </tr>
+                </thead>
+                <tbody id="editor-table-body"></tbody>
+            </table>
+            <div class="editor-footer">
+                <button class="editor-footer-btn print-btn" onclick="printEditorData()">PRINT</button>
+            </div>
+        </div>
+        <!-- PARAMETERS TAB -->
+        <div class="editor-tab-content" id="tab-parameters">
+            <div class="params-grid" id="params-grid">
+                <!-- Dynamic content will be inserted here -->
+            </div>
+            <div class="editor-footer">
+                <button class="editor-footer-btn" onclick="resetParameters()">RESET</button>
+                <button class="editor-footer-btn print-btn" onclick="printParameters()">PRINT</button>
+            </div>
+        </div>
+        <!-- SCENE TAB -->
+        <div class="editor-tab-content" id="tab-scene">
+            <div class="params-grid" id="scene-params-grid">
+                <!-- Dynamic content will be inserted here -->
+            </div>
+            <div class="editor-footer">
+                <button class="editor-footer-btn" onclick="resetSceneParameters()">RESET</button>
+                <button class="editor-footer-btn print-btn" onclick="printSceneParameters()">PRINT</button>
+            </div>
+        </div>
+    </div>
+    <!-- MOBILE LABELS TOGGLE -->
+    <div id="mobile-labels-toggle">
+        <input type="checkbox" id="mobile-labels-cb"> <span>Labels</span>
+    </div>
+    <div id="scene-container"></div>
+    <!-- FOOTER -->
+    <div id="footer">
+        <div class="footer-social">
+            <a href="mailto:info@status-co.com" target="_blank" title="Email">
+                <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+            </a>
+            <a href="https://instagram.com/_status_co" target="_blank" title="Instagram">
+                <svg viewBox="0 0 24 24"><path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8C4 18.39 5.61 20 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6C20 5.61 18.39 4 16.4 4H7.6m9.65 1.5a1.25 1.25 0 0 1 1.25 1.25A1.25 1.25 0 0 1 17.25 8 1.25 1.25 0 0 1 16 6.75a1.25 1.25 0 0 1 1.25-1.25M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/></svg>
+            </a>
+        </div>
+        <div class="footer-right">
+            <span class="footer-copyright">ALL RIGHTS RESERVED © STATUS CO 2026</span>
+            <a href="https://status-co.com/terms-conditions" target="_blank" class="footer-terms">TERMS AND CONDITIONS</a>
+        </div>
+    </div>
+    <div id="side-panel">
+        <button class="panel-close-btn" onclick="closePanel()">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+                <path d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z" fill="#000"/>
+            </svg>
+        </button>
+        <div class="panel-media-section" id="panel-media"></div>
+        <div class="panel-text-section">
+            <div class="panel-artist" id="panel-artist"></div>
+            <div class="panel-title" id="panel-title"></div>
+            <div class="panel-meta-grid" id="panel-meta-grid">
+                <!-- Dynamic Content -->
+            </div>
+            <div class="panel-desc-header">Product Description</div>
+            <div class="panel-description" id="panel-desc"></div>
+            <div class="panel-bio-header" id="panel-bio-header"></div>
+            <div class="panel-bio-text" id="panel-bio"></div>
+            <div id="panel-links"></div>
+        </div>
+    </div>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/",
+                "three-mesh-bvh": "https://cdn.jsdelivr.net/npm/three-mesh-bvh@0.6.8/build/index.module.js"
+            }
+        }
+    </script>
+    <script type="module" src="app.js"></script>
+    <script>
+        const menuToggle = document.getElementById('menu-toggle');
+        const menuItems = document.getElementById('mobile-menu-items');
+
+        function closeMenu() {
+            if (menuItems && menuItems.classList.contains('open')) {
+                menuItems.classList.remove('open');
+                menuToggle.textContent = 'MENU';
+            }
+        }
+
+        if (menuToggle) {
+            menuToggle.addEventListener('click', () => {
+                const isOpen = menuItems.classList.toggle('open');
+                menuToggle.textContent = isOpen ? 'CLOSE' : 'MENU';
+            });
+        }
+    </script>
+</body>
+</html>

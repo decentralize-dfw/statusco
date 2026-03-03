@@ -104,23 +104,23 @@
 --cam2-show-public: yes;
 
 /* CAMERA 2 POSITION */
---cam2-pos-x: 5000;
---cam2-pos-y: 7400;
+--cam2-pos-x: 5046;
+--cam2-pos-y: 7500;
 --cam2-pos-z: 5000;
 --cam2-lock-mode: full;
 
 /* CAMERA 3 POSITION */
---cam3-pos-x: 2500;
---cam3-pos-y: 1500;
+--cam3-pos-x: 2000;
+--cam3-pos-y: 2100;
 --cam3-pos-z: 0;
 --cam3-lock-mode: horizontal;
---cam3-show-public: yes;
+--cam3-show-public: no;
 --mobile-labels-show-public: no;
 
 /* MOBILE CAMERA */
---cam-mobile-pos-x: 5800;
---cam-mobile-pos-y: 10000;
---cam-mobile-pos-z: -2300;
+--cam-mobile-pos-x: 20000;
+--cam-mobile-pos-y: 5000;
+--cam-mobile-pos-z: -10000;
 --cam-mobile-lock-mode: none;
 --cam-mobile-fov: 60;
 
@@ -154,7 +154,7 @@
 
 /* CAMERA LIMITS */
 --camera-min-polar-angle: 0;
---camera-max-polar-angle: 90;
+--camera-max-polar-angle: 60;
 
 /* CAMERA GENERAL */
 --camera-perspective-fov: 52;
@@ -237,12 +237,13 @@
 
 /* WIREFRAME TOGGLE */
 --wire-toggle-size: 12px;
---mobile-toggle-scale: 1.6;
+--mobile-toggle-scale: 1;
 
 /* COLORS */
 --ui-color: #000000;
 --bg-color: #ffffff;
 --accent-color: #FF006A;
+
 
 
 
@@ -394,54 +395,53 @@ html, body {
     letter-spacing: 1px;
     text-transform: uppercase;
 }
-/* ===== NAVIGATION BAR ===== */
-#main-nav {
+/* ===== NAVIGATION HEADER ===== */
+#main-header {
     position: fixed;
     top: 20px;
     left: 0;
-    right: 0;
+    width: 100%;
+    padding: 0 20px;
+    box-sizing: border-box;
     z-index: 1002;
     display: flex;
     justify-content: center;
     align-items: center;
+    transform: translateY(0px);
+    opacity: 1;
+    transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.4s ease;
     pointer-events: none;
-    padding: 0 20px;
 }
-#desktop-nav-menu {
+#main-header > *, #desktop-nav, #mobile-nav-container {
+    pointer-events: auto;
+}
+#desktop-nav {
     display: flex;
     flex-direction: row;
+    justify-content: center;
+    flex-wrap: nowrap;
     gap: 6px;
     pointer-events: auto;
 }
-#desktop-nav-menu .info-btn,
-#nav-dropdown .info-btn {
-    text-decoration: none;
-    color: #000;
-}
-.nav-current {
-    cursor: default;
-    pointer-events: none;
-    opacity: 0.45;
-}
-#nav-hamburger {
+#mobile-nav-container {
     display: none;
-    pointer-events: auto;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
+    position: absolute;
+    right: 20px;
+    top: 0;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
 }
-#nav-dropdown {
+#mobile-menu-items {
     display: none;
     flex-direction: column;
-    gap: 5px;
-    position: fixed;
-    top: 46px;
-    right: 12px;
-    pointer-events: auto;
-    z-index: 1003;
+    gap: 6px;
+    margin-top: 6px;
 }
-#nav-dropdown.open {
-    display: flex;
+#mobile-menu-items.open { display: flex; }
+#mobile-menu-items .info-btn {
+    width: 80px;
+    justify-content: center;
 }
 .btn-about-logo {
     display: none;
@@ -478,9 +478,14 @@ html, body {
     letter-spacing: 0.5px;
     transition: all 0.2s;
     white-space: nowrap;
+    text-decoration: none;
+    flex-shrink: 1;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
 }
 .info-btn:hover { background: rgba(255, 255, 255, 0.95); }
-.info-btn.active { background: #29174d; color: #fff; }
+.info-btn.active { background: #29174d; border-color: #29174d; color: #fff; font-weight: 700; }
 .info-btn.active img { filter: invert(1); }
 .info-btn img {
     width: 14px;
@@ -1246,9 +1251,12 @@ html, body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    z-index: 50;
+    z-index: 60;
     padding: 0 20px;
+    font-family: var(--font-body);
+    pointer-events: none;
 }
+.footer-social, .footer-right { pointer-events: auto; }
 .footer-social {
     display: flex;
     align-items: center;
@@ -1259,6 +1267,7 @@ html, body {
     align-items: center;
     justify-content: center;
     transition: all 0.2s;
+    text-decoration: none;
 }
 .footer-social a:hover { opacity: 0.6; }
 .footer-social svg { width: 16px; height: 16px; fill: #000; }
@@ -1462,14 +1471,9 @@ html, body {
     }
     #info-panel.open { transform: translateY(0); }
     /* NAV: mobile de sadece hamburger görünür */
-    #main-nav {
-        top: 12px;
-        justify-content: flex-end;
-        padding: 0 12px;
-    }
-    #desktop-nav-menu { display: none; }
-    #nav-hamburger { display: flex; }
-    #nav-dropdown { top: 44px; right: 12px; }
+    #main-header { top: 12px; padding: 0 12px; }
+    #desktop-nav { display: none; }
+    #mobile-nav-container { display: flex; right: 12px; }
     /* INFO BUTTONS: mobile de STATUS CO gizlenir, btn-about logo alır */
     #btn-status { display: none; }
     .btn-about-logo { display: inline-block; }
@@ -1537,7 +1541,7 @@ html, body {
     }
     #footer {
         bottom: 4px;
-        z-index: 50;
+        z-index: 60;
         justify-content: space-between;
         padding: 0 12px;
     }

@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,244 +19,6 @@
             min-height: 100vh;
             margin: 0;
             padding: 0;
-        }
-        html, body {
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-        }
-        ::-webkit-scrollbar { display: none; }
-
-        /* ========================================================= */
-        /* HEADER VE MENÜ STİLLERİ (SABİT, BEYAZ/SİYAH, BLURLU) */
-        /* ========================================================= */
-        #main-header {
-            position: fixed;
-            top: 20px;
-            left: 0;
-            width: 100%;
-            padding: 0 20px;
-            z-index: 1002;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            pointer-events: none; /* Dış alan tıklamaları engellememesi için */
-        }
-
-        .header-left, #desktop-nav, #mobile-nav-container {
-            pointer-events: auto;
-        }
-
-        .header-left {
-            position: absolute;
-            left: 20px;
-            top: 0;
-        }
-
-        .side-logo {
-            width: 40px;
-            height: auto;
-            transition: transform 0.3s ease;
-        }
-
-        .side-logo:hover {
-            transform: scale(1.05);
-        }
-
-        #desktop-nav {
-            display: flex;
-            flex-direction: row;
-            justify-content: center;
-            flex-wrap: nowrap;
-            gap: 6px;
-        }
-
-        .info-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            padding: 6px 10px;
-            background: rgba(255, 255, 255, 0.6); /* Beyaz arkaplan */
-            backdrop-filter: blur(2px);
-            -webkit-backdrop-filter: blur(2px);
-            border: 1px solid #000000; /* Siyah kenarlık */
-            border-radius: 6px;
-            cursor: pointer;
-            text-decoration: none;
-            font-family: 'Space Mono', monospace;
-            font-size: 9px;
-            line-height: normal;
-            color: #000000; /* Siyah metin */
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            transition: all 0.2s ease-in-out;
-            white-space: nowrap;
-            flex-shrink: 1;
-        }
-
-        .info-btn:hover {
-            background: rgba(0, 0, 0, 0.1); 
-            border-color: #000000;
-            transform: none;
-            box-shadow: none;
-        }
-
-        .info-btn.active {
-            background: transparent;
-            border-color: #000000;
-            color: #000000;
-            font-weight: 700;
-        }
-
-        #mobile-nav-container {
-            display: none;
-            position: absolute;
-            right: 20px;
-            top: 0;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 6px;
-        }
-
-        #mobile-menu-items {
-            display: none;
-            flex-direction: column;
-            gap: 6px;
-            margin-top: 6px;
-        }
-
-        #mobile-menu-items.open {
-            display: flex;
-        }
-
-        #mobile-menu-items .info-btn {
-            width: 80px;
-            justify-content: center;
-        }
-
-        @media (max-width: 768px) {
-            #main-header {
-                top: 12px;
-                padding: 0 12px;
-            }
-            .header-left {
-                left: 12px;
-            }
-            #desktop-nav {
-                display: none;
-            }
-            #mobile-nav-container {
-                display: flex;
-                right: 12px;
-            }
-            .side-logo {
-                width: 32px;
-            }
-            .info-btn {
-                padding: clamp(4px, 1.5vw, 8px) clamp(5px, 2vw, 10px);
-                font-size: clamp(5px, 1.8vw, 7px);
-                flex-shrink: 1;
-                min-width: 0;
-            }
-            #mobile-menu-items .info-btn {
-                width: 80px;
-            }
-        }
-
-        /* ========================================================= */
-        /* FOOTER STILLERI (BİREBİR BOYUTLAR, SİYAH RENKLER) */
-        /* ========================================================= */
-        #footer {
-            position: fixed;
-            bottom: 4px;
-            left: 0;
-            right: 0;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            z-index: 60; 
-            padding: 0 20px;
-            font-family: 'Space Mono', monospace;
-            pointer-events: none; 
-        }
-
-        .footer-social, .footer-right {
-            pointer-events: auto;
-        }
-
-        .footer-social {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .footer-social a {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
-            text-decoration: none;
-        }
-
-        .footer-social a:hover {
-            opacity: 0.6;
-        }
-
-        .footer-social svg {
-            width: 16px;
-            height: 16px;
-            fill: #000000; /* İkonlar siyah */
-        }
-
-        .footer-right {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            font-size: 8px;
-            color: #000000; /* Metin siyah */
-            opacity: 0.8;
-        }
-
-        .footer-copyright {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .footer-terms {
-            color: #000000; /* Metin siyah */
-            text-decoration: underline;
-        }
-
-        .footer-terms:hover {
-            opacity: 1;
-            font-weight: bold;
-        }
-
-        @media (max-width: 768px) {
-            #footer {
-                bottom: 4px;
-                padding: 0 12px;
-            }
-            .footer-social svg {
-                width: 14px;
-                height: 14px;
-            }
-            .footer-right {
-                font-size: 6px;
-                gap: 8px;
-            }
-        }
-
-
-/* --- MOBILE BANNER (Arka Plan) --- */
-        .header-bg {
-            position: relative;
-            background-color: #ffffff; /* Information açılınca alt tarafın bembeyaz ve temiz kalmasını sağlar */
-            background-image: url('https://raw.githubusercontent.com/decentralize-dfw/co-contemporaryartifacts-glb/main/mobile-header-popup.jpg');
-            background-size: 100% auto; /* Görseli yanlardan tam oturtur (fit eder), aşağısını serbest bırakır */
-            background-position: top center; /* Görseli en tepeye sabitler */
-            background-repeat: no-repeat;
         }
 
         /* --- DESKTOP BANNER & LOGO (1024px+) --- */
@@ -284,7 +45,16 @@
             }
         }
 
-        .logo-desktop-shift img {
+        /* --- MOBILE LOGO & HEADER --- */
+        @media (max-width: 1023px) {
+            .logo-mobile-scale {
+                width: 15%;
+                margin: 0 auto;
+                display: block;
+            }
+        }
+
+        .logo-desktop-shift img, .logo-mobile-scale img {
             width: 100%;
             height: auto;
             object-fit: contain;
@@ -318,15 +88,17 @@
             width: 100%;
             aspect-ratio: 1 / 1;
             display: flex; 
-            align-items: center; /* KARENİN TAM ORTASI İÇİN */
+            align-items: flex-end; /* ALIGN TO BOTTOM - GRID */
             justify-content: center;
             overflow: hidden; 
             background-color: transparent;
         }
 
         .fit-image { 
-            /* Object fit contain katsayıyla % scale edilince tam sığmayı sağlar */
+            width: 80%; 
+            height: 80%; 
             object-fit: contain; 
+            object-position: bottom; /* ENSURE ALIGNMENT */
         }
 
         #loading-overlay {
@@ -338,7 +110,7 @@
             position: fixed; inset: 0;
             background-color: rgba(255, 255, 255, 0.4);
             backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            z-index: 10000; display: none; overflow: hidden;
+            z-index: 1000; display: none; overflow: hidden;
         }
 
         #detail-modal {
@@ -414,15 +186,16 @@
             max-height: 100%;
             width: auto;
             height: auto;
-            object-fit: contain; 
+            object-fit: contain; /* Ensures the image fits the 80% area without cropping */
         }
 
+        /* Arrows - positioned at vertical center, on sides */
         .carousel-arrow {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            width: 30px; /* Ufaldı */
-            height: 30px; /* Ufaldı */
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             background: rgba(255,255,255,0.9);
             border: 1px solid rgba(0,0,0,0.1);
@@ -441,18 +214,20 @@
             color: rgba(0,0,0,0.8);
         }
 
-        /* Ekrana yapışmaması için boşluk bırakıldı */
-        .carousel-arrow.prev { left: 20px; }
-        .carousel-arrow.next { right: 20px; }
+        .carousel-arrow.prev { left: 4vw; }
+        .carousel-arrow.next { right: 4vw; }
 
         .carousel-arrow svg {
-            width: 16px;
-            height: 16px;
+            width: 20px;
+            height: 20px;
             stroke-width: 2;
         }
 
-        .carousel-arrow.hidden { display: none; }
+        .carousel-arrow.hidden {
+            display: none;
+        }
 
+        /* Desktop thumbnails - below the main image (hidden on mobile) */
         .carousel-thumbnails {
             display: none;
             justify-content: center;
@@ -464,9 +239,8 @@
 
         @media (min-width: 1024px) {
             .carousel-thumbnails.show { display: flex; position: absolute; bottom: 20px; }
-            /* Desktop'ta da kenardan biraz daha içeride dursun */
-            .carousel-arrow.prev { left: 40px; }
-            .carousel-arrow.next { right: 40px; }
+            .carousel-arrow.prev { left: 5vw; }
+            .carousel-arrow.next { right: 5vw; }
         }
 
         .carousel-thumb {
@@ -480,10 +254,22 @@
             transition: all 0.2s ease;
         }
 
-        .carousel-thumb:hover { opacity: 0.7; }
-        .carousel-thumb.active { border-color: #000; opacity: 1; }
-        .carousel-thumb img { width: 100%; height: 100%; object-fit: cover; }
+        .carousel-thumb:hover {
+            opacity: 0.7;
+        }
 
+        .carousel-thumb.active {
+            border-color: #000;
+            opacity: 1;
+        }
+
+        .carousel-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Mobile Carousel Dots */
         .carousel-mobile-dots {
             display: none;
             justify-content: center;
@@ -507,178 +293,201 @@
             transition: all 0.2s ease;
         }
 
-        .carousel-dot:hover { background-color: rgba(0, 0, 0, 0.4); }
-        .carousel-dot.active { background-color: rgba(0, 0, 0, 0.7); }
+        .carousel-dot:hover {
+            background-color: rgba(0, 0, 0, 0.4);
+        }
 
-        /* --- DESKTOP LANGUAGE TOGGLE BUTTON (ESKI YERİNDE: RIGHT 20PX, TOP 20PX) --- */
-        .lang-toggle-desktop {
+        .carousel-dot.active {
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        /* --- LANGUAGE TOGGLE BUTTON --- */
+        .lang-toggle {
+            position: fixed;
+            top: 12px;
+            right: 70px;
+            z-index: 10001;
+            font-family: 'Space Mono', monospace;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            padding: 6px 10px;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        @media (hover: hover) {
+            .lang-toggle:hover { background: rgba(200, 200, 200, 0.6); }
+        }
+        @media (min-width: 769px) {
+            .lang-toggle {
+                top: 20px;
+                right: 20px;
+                font-size: 9px;
+                padding: 6px 10px;
+            }
+        }
+
+        /* --- POPUP NAV BAR --- */
+        #popup-nav {
             position: fixed;
             top: 20px;
-            right: 20px;
-            z-index: 9999; /* Yükleme ekranının altında kalır */
+            left: 0;
+            right: 0;
+            z-index: 1002;
             display: flex;
+            justify-content: center;
+            align-items: center;
+            pointer-events: none;
+            padding: 0 20px;
+        }
+        .popup-nav-logo-wrap {
+            position: absolute;
+            left: 20px;
+            pointer-events: auto;
+        }
+        .popup-nav-logo {
+            width: 20px;
+            height: 20px;
+            object-fit: contain;
+            display: block;
+        }
+        #popup-desktop-nav {
+            display: flex;
+            flex-direction: row;
+            gap: 6px;
+            pointer-events: auto;
+        }
+        .popup-nav-btn {
+            display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 6px;
             padding: 6px 10px;
-            background: rgba(255, 255, 255, 0.6);
-            backdrop-filter: blur(2px);
-            -webkit-backdrop-filter: blur(2px);
-            border: 1px solid #000000;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(0, 0, 0, 0.08);
             border-radius: 6px;
             cursor: pointer;
             font-family: 'Space Mono', monospace;
             font-size: 9px;
-            color: #000000;
+            color: #000;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            text-decoration: none;
             white-space: nowrap;
+            transition: all 0.2s ease;
+            font-weight: 400;
         }
-        
-        /* --- DESKTOP BANNER: DİKEY ORTALAMA (TAILWIND OVERRIDE) --- */
-        @media (min-width: 1024px) {
-            .popup-outer-div {
-                display: block !important;
-                height: 100% !important;
-                min-height: 0 !important;
-                padding: 0 !important;
-            }
-            .popup-header-inner {
-                height: 100% !important;
-            }
+        @media (hover: hover) {
+            .popup-nav-btn:hover { background: rgba(200, 200, 200, 0.6); }
         }
-
-        /* --- GRID: KARE CROP, ALT-ORTA SABITLEME --- */
-        .aspect-square-container {
-            align-items: flex-end !important;
+        .popup-nav-current {
+            cursor: default;
+            pointer-events: none;
+            opacity: 0.45;
         }
-        .fit-image {
-            object-fit: cover !important;
-            object-position: center bottom !important;
-            flex-shrink: 0 !important;
+        #popup-hamburger {
+            display: none;
+            pointer-events: auto;
+            font-weight: 700;
         }
-
-       /* --- ITEM NAV ARROWS --- */
-        .item-nav-arrow {
+        #popup-dropdown {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
             position: fixed;
-            top: 50%;
-            transform: translateY(-50%);
-            z-index: 1200;
-            width: 22px;
-            height: 44px;
-            background: transparent; /* Siyah arkaplan kaldırıldı */
-            border: none;
-            color: #000000; /* Oklar siyah yapıldı */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            border-radius: 3px;
-            transition: opacity 0.2s;
-            padding: 0;
+            top: 46px;
+            right: 12px;
+            pointer-events: auto;
+            z-index: 1003;
         }
-        .item-nav-arrow:hover { opacity: 0.5; }
-        .item-nav-arrow.item-prev { left: 8px; }
-        .item-nav-arrow.item-next { right: 8px; }
-        .item-nav-arrow.hidden { display: none !important; }
-        .item-nav-arrow svg { width: 22px; height: 22px; stroke-width: 2.5; }
-        
-        /* Masaüstünde okları merkeze yaklaştırma */
-        @media (min-width: 1024px) {
-            .item-nav-arrow.item-prev { left: 40px; }
-            .item-nav-arrow.item-next { right: 40px; }
-        }
+        #popup-dropdown.open { display: flex; }
 
-        /* Desktop Hover iptali */
-        .lang-toggle-desktop:hover {
-            border-color: #000000;
+        @media (max-width: 768px) {
+            #popup-nav {
+                top: 12px;
+                justify-content: flex-end;
+                padding: 0 12px;
+            }
+            .popup-nav-logo-wrap { left: 12px; }
+            .popup-nav-logo { width: 18px; height: 18px; }
+            #popup-desktop-nav { display: none; }
+            #popup-hamburger { display: inline-flex; }
+            #popup-dropdown { top: 44px; right: 12px; }
+            .popup-nav-btn {
+                padding: clamp(4px, 1.5vw, 6px) clamp(5px, 2vw, 10px);
+                font-size: clamp(5px, 1.8vw, 7px);
+            }
+            /* Push page content below fixed nav */
+            .header-bg { padding-top: 50px; }
         }
     </style>
 </head>
 <body class="antialiased font-body">
-
-    <!-- ========================================================= -->
-    <!-- SABİT HEADER BÖLÜMÜ -->
-    <!-- ========================================================= -->
-    <header id="main-header">
-        
-        <!-- 1. SOL TARAFTAKİ LOGO -->
-        <div class="header-left">
+    <!-- Navigation Bar -->
+    <nav id="popup-nav">
+        <div class="popup-nav-logo-wrap">
             <a href="https://status-co.com/">
-                <img src="https://status-co.com/weblogo.png" alt="Status Co. Logo" class="side-logo">
+                <img src="weblogo.png" class="popup-nav-logo" alt="Status Co.">
             </a>
         </div>
-
-        <!-- 2. MASAÜSTÜ MENÜSÜ (TAM ORTADA) -->
-        <nav id="desktop-nav">
-            <a href="https://status-co.com/" class="info-btn">HOME</a>
-            <a href="https://status-co.com/gallery" class="info-btn">DROPS</a>
-            <a href="https://status-co.com/whatsyourstatus" class="info-btn">COLLABORATIONS</a>
-            <a href="https://status-co.com/popup" class="info-btn active">POP-UPS</a>
-            <a href="https://status-co.com/about" class="info-btn">ABOUT</a>
-        </nav>
-
-        <!-- 3. MOBİL MENÜ KISMI (SAĞ ÜSTTE) -->
-        <div id="mobile-nav-container">
-            <button id="menu-toggle" class="info-btn" style="font-weight: 700; width: 80px;">MENU</button>
-            <div id="mobile-menu-items">
-                <a href="https://status-co.com/" class="info-btn">HOME</a>
-                <a href="https://status-co.com/gallery" class="info-btn">DROPS</a>
-                <a href="https://status-co.com/whatsyourstatus" class="info-btn">COLLABORATIONS</a>
-                <a href="https://status-co.com/popup" class="info-btn active">POP-UPS</a>
-                <a href="https://status-co.com/about" class="info-btn">ABOUT</a>
-            </div>
+        <div id="popup-desktop-nav">
+            <a href="https://status-co.com/" class="popup-nav-btn">HOME</a>
+            <a href="https://status-co.com/gallery" class="popup-nav-btn">DROPS</a>
+            <a href="https://status-co.com/whatsyourstatus" class="popup-nav-btn">COLLABORATIONS</a>
+            <span class="popup-nav-btn popup-nav-current">POP-UPS</span>
+            <a href="https://status-co.com/about" class="popup-nav-btn">ABOUT</a>
         </div>
+        <button id="popup-hamburger" class="popup-nav-btn" onclick="togglePopupMenu()">MENU</button>
+        <div id="popup-dropdown">
+            <a href="https://status-co.com/" class="popup-nav-btn">HOME</a>
+            <a href="https://status-co.com/gallery" class="popup-nav-btn">DROPS</a>
+            <a href="https://status-co.com/whatsyourstatus" class="popup-nav-btn">COLLABORATIONS</a>
+            <span class="popup-nav-btn popup-nav-current">POP-UPS</span>
+            <a href="https://status-co.com/about" class="popup-nav-btn">ABOUT</a>
+        </div>
+    </nav>
 
-    </header>
-
-    <!-- Desktop Language Toggle Button (Eski yerine alındı, menü fontunda) -->
-    <button id="lang-toggle-desktop" class="lang-toggle-desktop hidden lg:flex outline-none" onclick="toggleLanguage()">TR</button>
+    <!-- Language Toggle Button -->
+    <button id="lang-toggle" class="lang-toggle" onclick="toggleLanguage()">TR</button>
 
     <div id="loading-overlay">
         <div class="font-body text-[10px] uppercase tracking-[0.3em] animate-pulse text-gray-400">POP UP 001: ARTSHOW</div>
     </div>
 
     <!-- Header Section -->
-    <!-- Alan 2 katına çıkarıldı. Mobilde min-h-[600px] civarı devasa bir kutu oldu -->
-   <div class="header-bg w-full overflow-hidden relative">
-        <!-- Desktop'ta justify-end kullanılarak GIF ve yapı orijinaline döndürüldü -->
-        <div class="popup-outer-div max-w-[2400px] mx-auto relative flex flex-col items-center justify-start min-h-0 pt-[320px] pb-[42px] h-auto">
-            
-            <!-- SADECE DESKTOP'TA GÖRÜNEN GIF (Yazı ve hizalama orijinal yerinde) -->
-            <div class="logo-desktop-shift hidden lg:flex pt-6 lg:pt-0">
+    <div class="header-bg w-full border-b border-gray-100 overflow-hidden">
+        <div class="max-w-[2400px] h-full mx-auto relative">
+            <div class="logo-desktop-shift logo-mobile-scale pt-6 lg:pt-0">
                 <img src="logo-anim-fuls.gif" alt="Logo Animated" onerror="this.style.display='none'">
             </div>
-            
-            <!-- MOBİL: Ortalanmış alan, yukarıdan 200px boşluk ile başlar (açıldığında zıplamaz, aşağı iter). DESKTOP: Orijinal hizasında -->
-            <header class="popup-header-inner flex flex-col lg:flex-row items-center lg:items-center justify-start lg:justify-end px-4 lg:px-16 h-auto relative z-20 w-full pt-6 pb-2 lg:py-0">
+            <header class="flex flex-col lg:flex-row items-center lg:items-center justify-start lg:justify-end px-4 lg:px-16 h-auto lg:h-full relative z-20 w-full pt-6 pb-2 lg:py-0">
                 <div class="hidden lg:block lg:w-[35%] pointer-events-none"></div>
-                <div class="w-full lg:w-[60%] flex flex-col items-center lg:items-start lg:justify-center text-center lg:text-left h-full">
-
+                <div class="w-full lg:w-[60%] flex flex-col items-center lg:items-start text-center lg:text-left">
                     <h1 id="site-title" class="font-header text-[11px] tracking-[0.5em] uppercase mb-3 lg:mb-4 text-black">POP UP 001: ARTSHOW</h1>
-
-                    <!-- Mobil: Ortada Information Tuşu, Sağ Kenarda TR Tuşu (Hover Kapalı) -->
-                    <div class="w-full relative flex justify-center items-center lg:hidden mb-4 h-[30px]">
-                        <button onclick="toggleInfo()" class="font-body text-[9px] uppercase tracking-widest border border-black/10 px-[10px] py-[6px] rounded-[6px] text-black bg-white outline-none cursor-pointer h-full">
+                    
+                    <div class="lg:hidden mb-2">
+                        <button onclick="toggleInfo()" class="font-body text-[9px] uppercase tracking-widest border border-black/10 px-4 py-2 hover:bg-black hover:text-white transition-all">
                             <span id="info-btn-text">Information</span> <span id="info-icon">+</span>
                         </button>
-                        <!-- Sağ kenara dayalı TR butonu (Menüdeki 12px right boşluğuyla birebir aynı hizada) -->
-                        <button id="lang-toggle-mobile" onclick="toggleLanguage()" class="absolute font-body text-[9px] uppercase tracking-widest border border-black/10 px-[10px] py-[6px] rounded-[6px] text-black bg-white outline-none cursor-pointer h-full" style="right: 12px;">
-                            TR
-                        </button>
                     </div>
-
+                    
                     <div id="header-description-container">
                         <p id="header-description" class="font-body text-[7.5pt] text-gray-600 whitespace-pre-wrap px-4 lg:px-0 text-justify" style="text-align-last: left;"></p>
                     </div>
                 </div>
             </header>
-            
         </div>
     </div>
 
-    <!-- Control Bar (Kategori Üstü Çizgi Boşluğu ve Alan İki Katına Çıkarıldı) -->
-    <div class="max-w-[2400px] mx-auto px-4 lg:px-16 pt-4 pb-4">
+    <!-- Control Bar -->
+    <div class="max-w-[2400px] mx-auto px-4 lg:px-16 pt-6 lg:pt-8 pb-4">
         <div class="flex items-center border-b border-gray-100 pb-4">
             <div class="flex items-center gap-4 flex-1 min-w-0">
                 <div id="filter-wrapper" class="flex flex-wrap items-center gap-2 lg:gap-6">
@@ -694,37 +503,8 @@
         <div id="main-container" class="transition-opacity duration-300"></div>
     </div>
 
-    <!-- ========================================================= -->
-    <!-- SABİT FOOTER ALANI -->
-    <!-- ========================================================= -->
-    <div id="footer">
-        <div class="footer-social">
-            <a href="mailto:info@status-co.com" title="Email">
-                <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-            </a>
-            <a href="https://instagram.com/status.co" target="_blank" title="Instagram">
-                <svg viewBox="0 0 24 24"><path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8C4 18.39 5.61 20 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6C20 5.61 18.39 4 16.4 4H7.6m9.65 1.5a1.25 1.25 0 0 1 1.25 1.25A1.25 1.25 0 0 1 17.25 8 1.25 1.25 0 0 1 16 6.75a1.25 1.25 0 0 1 1.25-1.25M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/></svg>
-            </a>
-        </div>
-        <div class="footer-right">
-            <span class="footer-copyright">ALL RIGHTS RESERVED © STATUS CO 2026</span>
-            <a href="https://status-co.com/terms-conditions" class="footer-terms">TERMS AND CONDITIONS</a>
-        </div>
-    </div>
-
     <!-- Modal Overlay -->
     <div id="detail-modal-overlay">
-        <!-- SOL ALT KÖŞEDE ÇOK UFAK MESAFELİ 6PX KOD (YENİ EKLENDİ - BOTTOM-2 LEFT-2 - BOLD YOK) -->
-        <div id="modal-drop-code" class="absolute bottom-2 left-2 lg:bottom-4 lg:left-4 z-[1100] text-[6px] font-body uppercase text-black tracking-wider"></div>
-
-        <!-- ITEM NAV ARROWS (öğeler arası geçiş, filtre hassas) -->
-        <button id="item-prev-btn" class="item-nav-arrow item-prev hidden" onclick="window.prevItem()">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
-        </button>
-        <button id="item-next-btn" class="item-nav-arrow item-next hidden" onclick="window.nextItem()">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
-        </button>
-
         <button id="close-modal" class="absolute top-6 left-6 lg:top-8 lg:left-8 z-[1100] p-2 hover:bg-black hover:text-white transition-all rounded-full bg-white/90 border border-gray-100 shadow-sm">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
@@ -748,42 +528,22 @@
     </div>
 
     <script type="module">
-        // =========================================================
-        // MOBİL MENÜ MANTIĞI (Açma / Kapama)
-        // =========================================================
-        const menuToggle = document.getElementById('menu-toggle');
-        const menuItems = document.getElementById('mobile-menu-items');
-        
-        function closeMenu() {
-            if(menuItems.classList.contains('open')) {
-                menuItems.classList.remove('open');
-                menuToggle.textContent = 'MENU';
-            }
-        }
-
-        menuToggle.addEventListener('click', () => {
-            const isOpen = menuItems.classList.toggle('open');
-            menuToggle.textContent = isOpen ? 'CLOSE' : 'MENU';
-        });
-
-        // =========================================================
-        // VERİ ÇEKME & LİSTELEME MANTIĞI 
-        // =========================================================
+        // --- LOCAL EXCEL MODE ---
         const LOCAL_EXCEL_PATH = 'CO-POPUP-PNG.xlsx';
 
         let artifacts = [];
         let filteredArtifacts = [];
-        let currentCategory = ''; 
+        let currentCategory = 'All';
         let isInfoOpen = false;
-        let currentLang = 'en'; 
-        let sheetRows = null; 
-        let currentModalDropCode = null; 
-        let currentCarouselImages = []; 
-        let currentCarouselIndex = 0; 
+        let currentLang = 'en'; // Default language is English
+        let sheetRows = null; // Store raw sheet data for language switching
+        let currentModalDropCode = null; // Track currently open modal item
+        let currentCarouselImages = []; // Array of images for current modal
+        let currentCarouselIndex = 0; // Current image index in carousel
 
-        // Sütun İndeksleri (Türkçe Kategori: G Sütunu -> 6)
+        // Column indices for data parsing (Kept intact to fetch right values from spreadsheet)
         const TR_COLUMNS = {
-            artworkName: 38, category: 6, productType: 40, color: 41, material: 42,
+            artworkName: 38, category: 39, productType: 40, color: 41, material: 42,
             description: 20, artistBio: 24, headerDesc: 3, price: 43
         };
         const EN_COLUMNS = {
@@ -791,8 +551,9 @@
             description: 18, artistBio: 23, headerDesc: 2, price: 16
         };
 
-        const TR_LABELS = { siteTitle: 'POP UP 001: ARTSHOW', information: 'Bilgi', categoryLabel: 'Kategori:', allCategory: 'Tümü' };
-        const EN_LABELS = { siteTitle: 'POP UP 001: ARTSHOW', information: 'Information', categoryLabel: 'Category:', allCategory: 'All' };
+        // Labels mapping only for the parts remaining (Title, Info Button, Categories)
+        const TR_LABELS = { siteTitle: 'POP UP 001: ARTSHOW', information: 'Bilgi', categoryLabel: 'Kategori:' };
+        const EN_LABELS = { siteTitle: 'POP UP 001: ARTSHOW', information: 'Information', categoryLabel: 'Category:' };
 
         function getLabels() {
             return currentLang === 'tr' ? TR_LABELS : EN_LABELS;
@@ -804,26 +565,29 @@
         }
 
         window.toggleLanguage = function() {
-            const btnDesktop = document.getElementById('lang-toggle-desktop');
-            const btnMobile = document.getElementById('lang-toggle-mobile');
+            const btn = document.getElementById('lang-toggle');
+            const container = document.getElementById('main-container');
 
-            if (currentLang === 'en') {
-                currentLang = 'tr';
-                if(btnDesktop) btnDesktop.innerText = 'ENG';
-                if(btnMobile) btnMobile.innerText = 'ENG';
-            } else {
-                currentLang = 'en';
-                if(btnDesktop) btnDesktop.innerText = 'TR';
-                if(btnMobile) btnMobile.innerText = 'TR';
-            }
+            container.classList.add('fade-out');
 
-            processSheetData();
-            setupFilters();
-            renderContent();
+            setTimeout(() => {
+                if (currentLang === 'en') {
+                    currentLang = 'tr';
+                    btn.innerText = 'ENG';
+                } else {
+                    currentLang = 'en';
+                    btn.innerText = 'TR';
+                }
 
-            if (currentModalDropCode && document.getElementById('detail-modal-overlay').style.display === 'block') {
-                window.openDetail(currentModalDropCode);
-            }
+                processSheetData();
+                setupFilters();
+                renderContent();
+                container.classList.remove('fade-out');
+
+                if (currentModalDropCode && document.getElementById('detail-modal-overlay').style.display === 'block') {
+                    window.openDetail(currentModalDropCode);
+                }
+            }, 300);
         };
 
         window.toggleInfo = function() {
@@ -840,10 +604,12 @@
             const cols = currentLang === 'tr' ? TR_COLUMNS : EN_COLUMNS;
             const labels = getLabels();
 
+            // Update UI labels based on language
             document.getElementById('site-title').innerText = labels.siteTitle;
             document.getElementById('info-btn-text').innerText = labels.information;
             document.getElementById('category-label').innerText = labels.categoryLabel;
 
+            // Update header description based on language
             const headerRow = currentLang === 'tr' ? 1 : 0;
             const headerCol = 2; // C column
             if (sheetRows[headerRow] && sheetRows[headerRow].c[headerCol] && sheetRows[headerRow].c[headerCol].v) {
@@ -860,8 +626,7 @@
 
                 return {
                     dropCode: val(1),
-                    artworkName: val(cols.artworkName), 
-                    category: val(cols.category),     
+                    category: val(cols.category),
                     imageLink: val(11),
                     images: allImages,
                     thumbnail: val(13),
@@ -869,7 +634,7 @@
                 };
             }).filter(i => i.dropCode && i.dropCode.includes("CA_"));
 
-            currentCategory = labels.allCategory;
+            currentCategory = 'All';
             filteredArtifacts = artifacts;
         }
 
@@ -900,9 +665,7 @@
         }
 
         function setupFilters() {
-            const labels = getLabels();
-            const categories = [labels.allCategory, ...new Set(artifacts.map(i => i.category))].filter(c => c);
-            
+            const categories = ['All', ...new Set(artifacts.map(i => i.category))].filter(c => c);
             document.getElementById('filter-list').innerHTML = categories.map(cat => `
                 <button onclick="applyFilter('${cat}')" class="filter-btn ${currentCategory === cat ? 'active' : ''}" data-cat="${cat}">${cat}</button>
             `).join('');
@@ -910,7 +673,6 @@
 
         window.applyFilter = function(cat) {
             const container = document.getElementById('main-container');
-            const labels = getLabels();
             
             const buttons = document.querySelectorAll('.filter-btn');
             buttons.forEach(btn => {
@@ -921,7 +683,7 @@
             container.classList.add('fade-out');
             setTimeout(() => {
                 currentCategory = cat;
-                filteredArtifacts = cat === labels.allCategory ? artifacts : artifacts.filter(i => i.category === cat);
+                filteredArtifacts = cat === 'All' ? artifacts : artifacts.filter(i => i.category === cat);
                 renderContent(); 
                 container.classList.remove('fade-out');
             }, 300);
@@ -929,65 +691,37 @@
 
         function renderContent() {
             const container = document.getElementById('main-container');
-            const newHTML = `<div class="dynamic-grid">${filteredArtifacts.map(renderGridItem).join('')}</div>`;
-            
-            
-            if (container.innerHTML !== newHTML) {
-                container.innerHTML = newHTML;
-            }
+            container.innerHTML = `<div class="dynamic-grid">${filteredArtifacts.map(renderGridItem).join('')}</div>`;
         }
 
         function renderGridItem(item) {
             const scalePct = item.thumbScale * 100;
+            // Only keeping the thumbnail container without any text descriptions
             return `
-                <div onclick="window.openDetail('${item.dropCode}')" class="cursor-pointer flex flex-col items-center justify-center">
-                    <div class="aspect-square-container overflow-hidden">
+                <div onclick="window.openDetail('${item.dropCode}')" class="cursor-pointer group flex flex-col items-center justify-center">
+                    <div class="aspect-square-container overflow-hidden hover:opacity-80 transition-opacity">
                         <img src="${item.thumbnail}" loading="lazy" 
                              style="width: ${scalePct}%; height: ${scalePct}%;" 
-                             class="fit-image">
-                    </div>
-                    <!-- SADECE DESKTOP, SOL ALTTA 6PX KOD (KATEGORİSİZ, BOLD İPTAL) -->
-                    <div class="w-full mt-1 px-1 hidden lg:flex justify-start">
-                        <span class="font-body text-[6px] uppercase tracking-wider text-black">${item.dropCode}</span>
+                             class="fit-image transition-opacity duration-300">
                     </div>
                 </div>
             `;
         }
 
-        function updateItemNavButtons() {
-            const idx = filteredArtifacts.findIndex(a => a.dropCode === currentModalDropCode);
-            const prevBtn = document.getElementById('item-prev-btn');
-            const nextBtn = document.getElementById('item-next-btn');
-            if (prevBtn) prevBtn.classList.toggle('hidden', idx <= 0);
-            if (nextBtn) nextBtn.classList.toggle('hidden', idx >= filteredArtifacts.length - 1);
-        }
-
-        window.prevItem = function() {
-            const idx = filteredArtifacts.findIndex(a => a.dropCode === currentModalDropCode);
-            if (idx > 0) window.openDetail(filteredArtifacts[idx - 1].dropCode);
-        };
-
-        window.nextItem = function() {
-            const idx = filteredArtifacts.findIndex(a => a.dropCode === currentModalDropCode);
-            if (idx < filteredArtifacts.length - 1) window.openDetail(filteredArtifacts[idx + 1].dropCode);
-        };
-
         window.openDetail = function(dropCode) {
-            currentModalDropCode = dropCode;
+            currentModalDropCode = dropCode; 
             const item = artifacts.find(a => a.dropCode === dropCode);
 
-            // Pop-up sol alt kod güncellemesi
-            document.getElementById('modal-drop-code').innerText = item.dropCode;
-
+            // Setup carousel
             currentCarouselImages = item.images && item.images.length > 0 ? item.images : [item.imageLink];
             currentCarouselIndex = 0;
             updateCarouselDisplay();
-            updateItemNavButtons();
 
             document.getElementById('detail-modal-overlay').style.display = 'block';
             document.body.style.overflow = 'hidden';
         };
 
+        // Carousel functions
         function updateCarouselDisplay() {
             const modalImage = document.getElementById('modal-image');
             const thumbsContainer = document.getElementById('carousel-thumbnails');
@@ -1009,6 +743,7 @@
                 nextBtn.classList.toggle('hidden', !hasMultipleImages || isLast);
             }
 
+            // Desktop thumbnails
             if (hasMultipleImages) {
                 thumbsContainer.classList.add('show');
                 thumbsContainer.innerHTML = currentCarouselImages.map((img, idx) => `
@@ -1021,6 +756,7 @@
                 thumbsContainer.innerHTML = '';
             }
 
+            // Mobile dots
             if (hasMultipleImages) {
                 mobileDotsContainer.classList.add('show');
                 mobileDotsContainer.innerHTML = currentCarouselImages.map((img, idx) => `
@@ -1052,15 +788,20 @@
             updateCarouselDisplay();
         };
 
+        // Swipe support for mobile
         let touchStartX = 0;
         let touchEndX = 0;
 
         function handleSwipe() {
             const swipeThreshold = 50;
             const diff = touchStartX - touchEndX;
+
             if (Math.abs(diff) > swipeThreshold) {
-                if (diff > 0) window.nextItem();
-                else window.prevItem();
+                if (diff > 0) {
+                    window.carouselNext();
+                } else {
+                    window.carouselPrev();
+                }
             }
         }
 
@@ -1085,13 +826,24 @@
             currentModalDropCode = null;
         };
         
-        // Klavye: Escape = kapat, ArrowLeft/Right = öğeler arası geçiş (filtre hassas)
-        window.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') closeBtn.onclick();
-            if (e.key === 'ArrowRight') window.nextItem();
-            if (e.key === 'ArrowLeft') window.prevItem();
-        });
+        window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeBtn.onclick(); });
         window.onload = fetchSheetData;
+
+        // Nav menu toggle
+        window.togglePopupMenu = function() {
+            const dropdown = document.getElementById('popup-dropdown');
+            if (!dropdown) return;
+            dropdown.classList.toggle('open');
+        };
+
+        // Close dropdown on outside click
+        document.addEventListener('click', function(e) {
+            const hamburger = document.getElementById('popup-hamburger');
+            const dropdown = document.getElementById('popup-dropdown');
+            if (dropdown && hamburger && !hamburger.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.classList.remove('open');
+            }
+        });
     </script>
 </body>
 </html>
