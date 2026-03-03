@@ -395,54 +395,51 @@ html, body {
     letter-spacing: 1px;
     text-transform: uppercase;
 }
-/* ===== NAVIGATION BAR ===== */
-#main-nav {
+/* ===== NAVIGATION HEADER ===== */
+#main-header {
     position: fixed;
     top: 20px;
     left: 0;
-    right: 0;
+    width: 100%;
+    padding: 0 20px;
     z-index: 1002;
     display: flex;
     justify-content: center;
     align-items: center;
+    transform: translateY(0px);
+    opacity: 1;
+    transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.4s ease;
     pointer-events: none;
-    padding: 0 20px;
 }
-#desktop-nav-menu {
+#main-header > *, #desktop-nav, #mobile-nav-container {
+    pointer-events: auto;
+}
+#desktop-nav {
     display: flex;
     flex-direction: row;
-    gap: 6px;
-    pointer-events: auto;
-}
-#desktop-nav-menu .info-btn,
-#nav-dropdown .info-btn {
-    text-decoration: none;
-    color: #000;
-}
-.nav-current {
-    cursor: default;
-    pointer-events: none;
-    opacity: 0.45;
-}
-#nav-hamburger {
-    display: none;
-    pointer-events: auto;
-    align-items: center;
     justify-content: center;
-    font-weight: 700;
+    flex-wrap: nowrap;
+    gap: 6px;
 }
-#nav-dropdown {
+#mobile-nav-container {
+    display: none;
+    position: absolute;
+    right: 20px;
+    top: 0;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+}
+#mobile-menu-items {
     display: none;
     flex-direction: column;
-    gap: 5px;
-    position: fixed;
-    top: 46px;
-    right: 12px;
-    pointer-events: auto;
-    z-index: 1003;
+    gap: 6px;
+    margin-top: 6px;
 }
-#nav-dropdown.open {
-    display: flex;
+#mobile-menu-items.open { display: flex; }
+#mobile-menu-items .info-btn {
+    width: 80px;
+    justify-content: center;
 }
 .btn-about-logo {
     display: none;
@@ -479,6 +476,9 @@ html, body {
     letter-spacing: 0.5px;
     transition: all 0.2s;
     white-space: nowrap;
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
 }
 .info-btn:hover { background: rgba(255, 255, 255, 0.95); }
 .info-btn.active { background: #29174d; color: #fff; }
@@ -1463,14 +1463,9 @@ html, body {
     }
     #info-panel.open { transform: translateY(0); }
     /* NAV: mobile de sadece hamburger görünür */
-    #main-nav {
-        top: 12px;
-        justify-content: flex-end;
-        padding: 0 12px;
-    }
-    #desktop-nav-menu { display: none; }
-    #nav-hamburger { display: flex; }
-    #nav-dropdown { top: 44px; right: 12px; }
+    #main-header { top: 12px; padding: 0 12px; }
+    #desktop-nav { display: none; }
+    #mobile-nav-container { display: flex; right: 12px; }
     /* INFO BUTTONS: mobile de STATUS CO gizlenir, btn-about logo alır */
     #btn-status { display: none; }
     .btn-about-logo { display: inline-block; }

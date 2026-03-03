@@ -20,82 +20,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Capriola&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <style>
-        /* ===== HEADER (about.html yapısı, gallery renkleri) ===== */
-        #main-header {
-            position: fixed;
-            top: 20px;
-            left: 0;
-            width: 100%;
-            padding: 0 20px;
-            z-index: 1002;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transform: translateY(0px);
-            opacity: 1;
-            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.4s ease;
-            pointer-events: none;
-        }
-
-        .header-left, #desktop-nav, #mobile-nav-container {
-            pointer-events: auto;
-        }
-
-        .header-left {
-            position: absolute;
-            left: 20px;
-            top: 0;
-        }
-
-        .side-logo {
-            width: 40px;
-            height: auto;
-            transition: transform 0.3s ease;
-        }
-
-        .side-logo:hover { transform: scale(1.05); }
-
-        #desktop-nav {
-            display: flex;
-            flex-direction: row;
-            justify-content: center;
-            flex-wrap: nowrap;
-            gap: 6px;
-        }
-
-        #mobile-nav-container {
-            display: none;
-            position: absolute;
-            right: 20px;
-            top: 0;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 6px;
-        }
-
-        #mobile-menu-items {
-            display: none;
-            flex-direction: column;
-            gap: 6px;
-            margin-top: 6px;
-        }
-
-        #mobile-menu-items.open { display: flex; }
-
-        #mobile-menu-items .info-btn {
-            width: 80px;
-            justify-content: center;
-        }
-
-        @media (max-width: 768px) {
-            #main-header { top: 12px; padding: 0 12px; }
-            .header-left { left: 12px; }
-            #desktop-nav { display: none; }
-            #mobile-nav-container { display: flex; right: 12px; }
-            .side-logo { width: 32px; }
-        }
-    </style>
 </head>
 <body>
     <div id="loader">
@@ -110,11 +34,6 @@
     </div>
     <!-- NAVIGATION -->
     <header id="main-header">
-        <div class="header-left">
-            <a href="https://status-co.com/">
-                <img src="https://status-co.com/weblogo.png" alt="Status Co. Logo" class="side-logo">
-            </a>
-        </div>
         <nav id="desktop-nav">
             <a href="https://status-co.com/" class="info-btn">HOME</a>
             <a href="https://status-co.com/gallery" class="info-btn active">DROPS</a>
