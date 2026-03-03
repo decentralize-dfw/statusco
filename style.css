@@ -480,6 +480,7 @@ html, body {
     white-space: nowrap;
     text-decoration: none;
     flex-shrink: 1;
+    box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
     outline: none;
 }
