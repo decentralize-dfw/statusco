@@ -23,35 +23,25 @@
     <script type="module" src="https://unpkg.com/@splinetool/viewer@1.12.39/build/spline-viewer.js"></script>
     
     <style>
-        /* ========================================= */
-        /* AYARLAR: BURADAN PİKSEL OLARAK DEĞİŞTİR */
-        /* ORİJİNAL KODDAN ALINDI - BOZULMADI */
-        /* ========================================= */
+        /* layout spacing */
         :root {
-            /* 1. ÜST BOŞLUK (Metin ile Video arası) */
-            /* Mobil cihazlar için üst boşluk */
             --video-margin-mobile: 80px;
-            /* Masaüstü cihazlar için üst boşluk */
             --video-margin-desktop: 120px;
-
-            /* 2. ALT BOŞLUK (Video bitimi ile sayfa sonu arası) */
-            /* Mobil cihazlar için alt boşluk */
             --video-margin-bottom-mobile: 60px;
-            /* Masaüstü cihazlar için alt boşluk */
             --video-margin-bottom-desktop: 100px;
         }
 
-        /* TEMEL AYARLAR */
+        /* base */
         body {
             font-family: 'Space Mono', monospace;
             margin: 0;
             padding: 0;
             color: #111;
-            background-color: #29174d; /* Fallback renk */
+            background-color: #29174d;
             overflow-x: hidden;
         }
 
-        /* VİDEO MESAFE KONTROLÜ (YUKARIDAKİ AYARLARI KULLANIR) */
+        /* video block spacing */
         #video-link-container {
             margin-top: var(--video-margin-mobile);
             margin-bottom: var(--video-margin-bottom-mobile);
@@ -341,7 +331,7 @@
         }
 
         /* ========================================================= */
-        /* FOOTER STILLERI (ORİJİNAL KODDAN KORUNARAK ALINDI) */
+        /* footer */
         /* ========================================================= */
         #footer {
             position: fixed;
@@ -541,7 +531,7 @@
         </section>
     </div>
 
-    <!-- FOOTER ALANI (ORİJİNAL FOOTER BİREBİR KORUNDU) -->
+    <!-- footer -->
     <div id="footer">
         <div class="footer-social">
             <a href="mailto:info@status-co.com" title="Email">

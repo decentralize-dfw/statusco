@@ -3477,8 +3477,7 @@ window.updateSceneSliderParam = function(paramName, value, sliderEl) {
         valueSpan.textContent = value + suffix;
     }
    if (paramName === 'cameraPerspectiveFov') {
-        // 1. PERSPECTIVE FOV FIX
-        // Hangi kamerada olursan ol, Perspective kamerayı güncelle
+        // keep the perspective camera in sync whichever camera is active
         if (camera) {
             camera.fov = parseFloat(value);
             camera.updateProjectionMatrix();
@@ -3486,10 +3485,9 @@ window.updateSceneSliderParam = function(paramName, value, sliderEl) {
         markDirty();
 
     } else if (paramName === 'cameraOrthoFov') {
-        // 2. ORTHO FOV FIX
-        // Hangi kamerada olursan ol, Ortho kamerayı güncelle
+        // ortho FOV is expressed through zoom
         const orthoFov = parseFloat(value) || 45;
-        // Eğer mobildeysek mobile zoom, değilsek desktop zoom'u baz al
+        // base zoom depends on the active device profile
         const baseZoom = currentCameraIndex === 'mobile' ? (runtimeParams.initialCameraZoomMobile || 2) : (runtimeParams.initialCameraZoom || 3);
         
         if (cameraOrtho) {
@@ -3499,9 +3497,8 @@ window.updateSceneSliderParam = function(paramName, value, sliderEl) {
         markDirty();
 
     } else if (paramName === 'initialCameraZoom') {
-        // 3. INITIAL ZOOM (DESKTOP) FIX
+        // initial desktop zoom
         const newZoom = parseFloat(value);
-        // Sadece Desktop modundaysak uygula
         if (currentCameraIndex !== 'mobile') {
             const orthoFov = runtimeParams.cameraOrthoFov || 45;
             if (cameraOrtho) {
@@ -3512,9 +3509,8 @@ window.updateSceneSliderParam = function(paramName, value, sliderEl) {
         markDirty();
 
     } else if (paramName === 'initialCameraZoomMobile') {
-        // 4. INITIAL ZOOM (MOBILE) FIX
+        // initial mobile zoom
         const newZoomMobile = parseFloat(value);
-        // Sadece Mobile modundaysak uygula
         if (currentCameraIndex === 'mobile') {
             const mobileFov = runtimeParams.camMobileFov || 45;
             if (cameraOrtho) {
